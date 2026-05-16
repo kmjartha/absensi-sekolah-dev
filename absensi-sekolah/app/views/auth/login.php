@@ -1,0 +1,64 @@
+<div class="login-shell">
+  <aside class="login-hero">
+    <div class="brand">
+      <div class="logo">SA</div>
+      <div>
+        <div class="name">SiAbsen</div>
+        <div class="tag">Sistem Absensi Sekolah</div>
+      </div>
+    </div>
+
+    <div class="blurb">
+      <h1>Selamat datang<br>kembali.</h1>
+      <p>Masuk untuk mencatat kehadiran Anda hari ini, mengajukan cuti, atau memantau aktivitas tim sekolah secara real-time.</p>
+    </div>
+
+    <div class="features">
+      <div><i class="bi bi-camera-fill"></i> Absensi selfie + verifikasi wajah</div>
+      <div><i class="bi bi-geo-alt-fill"></i> Validasi GPS lokasi sekolah</div>
+      <div><i class="bi bi-bar-chart-fill"></i> Laporan & rekap otomatis</div>
+    </div>
+  </aside>
+
+  <main class="login-form-wrap">
+    <form class="login-form" method="post" action="<?= url('/login') ?>" autocomplete="on">
+      <?= csrf_field() ?>
+
+      <h2>Masuk</h2>
+      <p class="subt">Gunakan NIY dan password Anda untuk melanjutkan.</p>
+
+      <?php if (!empty($error)): ?>
+        <div class="alert-soft">
+          <i class="bi bi-exclamation-circle-fill"></i><span><?= e($error) ?></span>
+        </div>
+      <?php endif; ?>
+
+      <div class="form-field">
+        <label for="niy">NIY</label>
+        <input class="form-control-clean" type="text" id="niy" name="niy"
+               value="<?= e($old_niy ?? '') ?>" required autofocus
+               placeholder="Contoh: HRD001">
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input class="form-control-clean" type="password" id="password" name="password"
+               required placeholder="••••••••••">
+      </div>
+
+      <div class="remember-row">
+        <label><input type="checkbox" name="remember" value="1" <?= !empty($old_niy) ? 'checked' : '' ?>> Ingat NIY saya</label>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Masuk ke Dashboard <i class="bi bi-arrow-right ms-1"></i>
+      </button>
+
+      <div class="hint">
+        <strong>Akun demo:</strong>
+        <code>HRD001</code>, <code>KEP001</code>, <code>GUR001</code>, <code>STF001</code>, <code>SEC001</code>
+        — password semua: <code>password123</code>
+      </div>
+    </form>
+  </main>
+</div>
