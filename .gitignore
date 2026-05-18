@@ -1,0 +1,4 @@
+dev/
+uploads/
+.env
+/vendor
