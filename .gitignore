@@ -1,10 +1,4 @@
-.env
-uploads/*
-!uploads/.gitkeep
-
 dev/
-
-vendor/
-node_modules/
-
-storage/*.key
+uploads/
+.env
+/vendor
