@@ -51,6 +51,18 @@ if (!function_exists('initials')) {
     }
 }
 
+if (!function_exists('current_time')) {
+    /**
+     * Get current time in Asia/Makassar timezone
+     * @param string $format Default 'Y-m-d H:i:s'
+     * @return string Formatted current time
+     */
+    function current_time(string $format = 'Y-m-d H:i:s'): string
+    {
+        return date($format);
+    }
+}
+
 if (!function_exists('status_badge')) {
     function status_badge(string $status): string
     {
