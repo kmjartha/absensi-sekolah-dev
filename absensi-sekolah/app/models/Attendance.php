@@ -10,17 +10,21 @@ class Attendance extends Model
 
     public function todayFor(int $userId): ?array
     {
-        $stmt = $this->db()->prepare("SELECT * FROM attendances WHERE user_id = ? AND tanggal = CURDATE() LIMIT 1");
-        $stmt->execute([$userId]);
+        $today = date('Y-m-d');
+        $stmt = $this->db()->prepare("SELECT * FROM attendances WHERE user_id = ? AND tanggal = ? LIMIT 1");
+        $stmt->execute([$userId, $today]);
         return $stmt->fetch() ?: null;
     }
 
     public function statsToday(): array
     {
-        $rows = $this->db()->query(
+        $today = date('Y-m-d');
+        $stmt = $this->db()->prepare(
             "SELECT status, COUNT(*) AS total
-             FROM attendances WHERE tanggal = CURDATE() GROUP BY status"
-        )->fetchAll();
+             FROM attendances WHERE tanggal = ? GROUP BY status"
+        );
+        $stmt->execute([$today]);
+        $rows = $stmt->fetchAll();
         $out = ['hadir'=>0,'telat'=>0,'izin'=>0,'sakit'=>0,'alpha'=>0];
         foreach ($rows as $r) $out[$r['status']] = (int)$r['total'];
         return $out;

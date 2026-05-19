@@ -16,6 +16,9 @@ class Database
         );
         try {
             self::$pdo = new PDO($dsn, $cfg['username'], $cfg['password'], $cfg['options']);
+            $timezone = date_default_timezone_get();
+            $offset = (new \DateTime('now', new \DateTimeZone($timezone)))->format('P');
+            self::$pdo->exec("SET time_zone = '{$offset}'");
         } catch (\PDOException $e) {
             throw new \RuntimeException(
                 "Koneksi database gagal. Pastikan service MySQL aktif & database '{$cfg['database']}' sudah di-import. ({$e->getMessage()})"
