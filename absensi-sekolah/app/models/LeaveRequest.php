@@ -46,6 +46,23 @@ class LeaveRequest extends Model
         return $stmt->fetchAll();
     }
 
+    public function listNonHrd(?string $status = null): array
+    {
+        $sql = "SELECT lr.*, u.nama AS user_nama, u.niy AS user_niy, r.name AS user_role,
+                       v.nama AS verifier_nama
+                FROM leave_requests lr
+                JOIN users u  ON u.id = lr.user_id
+                JOIN roles r  ON r.id = u.role_id
+                LEFT JOIN users v ON v.id = lr.verified_by
+                WHERE r.name <> 'HRD'";
+        $par = [];
+        if ($status) { $sql .= " AND lr.status = ?"; $par[] = $status; }
+        $sql .= " ORDER BY FIELD(lr.status,'pending','approved','rejected'), lr.created_at DESC";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute($par);
+        return $stmt->fetchAll();
+    }
+
     public function listFor(int $userId): array
     {
         $stmt = $this->db()->prepare(

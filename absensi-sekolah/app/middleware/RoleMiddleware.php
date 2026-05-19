@@ -32,10 +32,10 @@ class RoleMiddleware
 
 class HrdOnly extends RoleMiddleware
 {
-    protected array $allowed = ['HRD'];
+    protected array $allowed = ['HRD', 'Supervisor'];
 }
 
 class HrdKepsek extends RoleMiddleware
 {
-    protected array $allowed = ['HRD', 'Kepsek'];
+    protected array $allowed = ['HRD', 'Supervisor', 'Kepsek'];
 }

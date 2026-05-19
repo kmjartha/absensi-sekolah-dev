@@ -11,13 +11,13 @@ class LaporanController extends Controller
     /** GET /laporan — auto-pilih general (HRD/Kepsek) atau personal (pegawai) */
     public function index(): string
     {
-        return has_role('HRD','Kepsek') ? $this->general() : $this->personal();
+        return has_role('HRD','Supervisor','Kepsek') ? $this->general() : $this->personal();
     }
 
     /** General rekap (HRD/Kepsek) */
     public function general(): string
     {
-        if (!has_role('HRD','Kepsek')) {
+        if (!has_role('HRD','Supervisor','Kepsek')) {
             http_response_code(403);
             return $this->render('errors.403', ['title'=>'403'], 'auth');
         }
@@ -36,7 +36,7 @@ class LaporanController extends Controller
     /** GET /laporan/karyawan — daftar karyawan + ringkasan utk drill-down */
     public function karyawan(): string
     {
-        if (!has_role('HRD','Kepsek')) {
+        if (!has_role('HRD','Supervisor','Kepsek')) {
             http_response_code(403);
             return $this->render('errors.403', ['title'=>'403'], 'auth');
         }
@@ -70,7 +70,7 @@ class LaporanController extends Controller
     /** GET /laporan/karyawan/{id} — detail per karyawan utk periode */
     public function karyawanDetail(int $id): string
     {
-        if (!has_role('HRD','Kepsek')) {
+        if (!has_role('HRD','Supervisor','Kepsek')) {
             http_response_code(403);
             return $this->render('errors.403', ['title'=>'403'], 'auth');
         }
@@ -147,7 +147,7 @@ class LaporanController extends Controller
     /** GET /laporan/export — Excel rekap general via HTML table */
     public function export(): string
     {
-        if (!has_role('HRD','Kepsek')) {
+        if (!has_role('HRD','Supervisor','Kepsek')) {
             http_response_code(403);
             return $this->render('errors.403', ['title'=>'403'], 'auth');
         }
@@ -193,7 +193,7 @@ class LaporanController extends Controller
     /** GET /laporan/karyawan/{id}/export — Excel detail per karyawan */
     public function karyawanExport(int $id): string
     {
-        if (!has_role('HRD','Kepsek')) {
+        if (!has_role('HRD','Supervisor','Kepsek')) {
             http_response_code(403);
             return $this->render('errors.403', ['title'=>'403'], 'auth');
         }

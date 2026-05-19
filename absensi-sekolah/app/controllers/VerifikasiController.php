@@ -11,13 +11,13 @@ class VerifikasiController extends Controller
     /** GET /verifikasi-cuti */
     public function index(): string
     {
-        if (!has_role('HRD','Kepsek')) return $this->forbid();
+        if (!has_role('HRD','Supervisor','Kepsek')) return $this->forbid();
 
         $status = $_GET['status'] ?? null;
         $model  = new LeaveRequest();
-        $rows   = has_role('HRD')
+        $rows   = has_role('HRD','Supervisor')
             ? $model->listAll($status)
-            : $model->listForGuruOnly($status);
+            : $model->listNonHrd($status);
 
         return $this->render('verifikasi.index', [
             'title'  => 'Verifikasi Cuti',
@@ -29,16 +29,22 @@ class VerifikasiController extends Controller
     /** POST /verifikasi-cuti/{id}/action */
     public function action(string $id): string
     {
-        if (!has_role('HRD','Kepsek')) return $this->forbid();
+        if (!has_role('HRD','Supervisor','Kepsek')) return $this->forbid();
 
         $model   = new LeaveRequest();
         $userM   = new User();
         $req     = $model->findWithUser((int)$id);
         if (!$req) { $this->flash('error', 'Pengajuan tidak ditemukan.'); return $this->redirect('/verifikasi-cuti'); }
 
-        // Kepsek hanya boleh approve/reject pengajuan dari Guru
-        if (has_role('Kepsek') && !has_role('HRD') && $req['user_role'] !== 'Guru') {
-            $this->flash('error', 'Anda hanya boleh memverifikasi pengajuan dari Guru.');
+        // Kepsek hanya boleh approve/reject pengajuan non-HRD.
+        if (has_role('Kepsek') && $req['user_role'] === 'HRD') {
+            $this->flash('error', 'Anda tidak dapat memverifikasi pengajuan HRD.');
+            return $this->redirect('/verifikasi-cuti');
+        }
+
+        // HRD tidak boleh memverifikasi pengajuan HRD sendiri; Supervisor yang memverifikasi HRD.
+        if (has_role('HRD') && !has_role('Supervisor') && $req['user_role'] === 'HRD') {
+            $this->flash('error', 'Pengajuan HRD hanya dapat diverifikasi oleh Supervisor.');
             return $this->redirect('/verifikasi-cuti');
         }
 

@@ -13,7 +13,7 @@ class KaryawanController extends Controller
 {
     private function guard(): void
     {
-        if (!has_role('HRD')) {
+        if (!has_role('HRD', 'Supervisor')) {
             http_response_code(403);
             echo $this->view->render('errors/403', ['title' => '403'], 'auth');
             exit;

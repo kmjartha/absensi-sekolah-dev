@@ -2,7 +2,7 @@
   <div>
     <h2 class="mb-1">Verifikasi Cuti</h2>
     <div class="text-muted-soft">
-      <?= has_role('HRD') ? 'Semua pengajuan dari seluruh karyawan' : 'Pengajuan dari Guru saja' ?>
+      <?= has_role('HRD','Supervisor') ? 'Semua pengajuan dari seluruh karyawan' : 'Pengajuan dari karyawan non-HRD' ?>
     </div>
   </div>
   <div class="btn-group">
