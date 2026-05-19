@@ -59,7 +59,13 @@ if (!function_exists('current_time')) {
      */
     function current_time(string $format = 'Y-m-d H:i:s'): string
     {
-        return date($format);
+        $timezone = date_default_timezone_get();
+        try {
+            $dt = new DateTime('now', new DateTimeZone($timezone));
+        } catch (Exception $e) {
+            $dt = new DateTime('now', new DateTimeZone('Asia/Makassar'));
+        }
+        return $dt->format($format);
     }
 }
 
