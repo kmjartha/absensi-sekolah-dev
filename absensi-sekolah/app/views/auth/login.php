@@ -10,7 +10,6 @@
 
     <div class="blurb">
       <h1>Selamat datang<br>kembali.</h1>
-      <p>Masuk untuk mencatat kehadiran Anda hari ini, mengajukan cuti, atau memantau aktivitas tim sekolah secara real-time.</p>
     </div>
 
     <div class="features">
