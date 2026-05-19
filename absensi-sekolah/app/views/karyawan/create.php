@@ -64,15 +64,15 @@
         <div class="col-12"><h5><i class="bi bi-geo-alt"></i> Geofence Kantor</h5></div>
         <div class="col-md-4">
           <label class="form-label">Latitude</label>
-          <input type="text" name="latitude_kantor" value="<?= e(old('latitude_kantor', '-6.2000000')) ?>" class="form-control">
+          <input type="text" name="latitude_kantor" value="<?= e(old('latitude_kantor', '-8.78560562700156')) ?>" class="form-control">
         </div>
         <div class="col-md-4">
           <label class="form-label">Longitude</label>
-          <input type="text" name="longitude_kantor" value="<?= e(old('longitude_kantor', '106.8166700')) ?>" class="form-control">
+          <input type="text" name="longitude_kantor" value="<?= e(old('longitude_kantor', '115.17669738117321')) ?>" class="form-control">
         </div>
         <div class="col-md-4">
           <label class="form-label">Radius (meter)</label>
-          <input type="number" name="radius_meter" value="<?= e(old('radius_meter', 150)) ?>" class="form-control">
+          <input type="number" name="radius_meter" value="<?= e(old('radius_meter', 180)) ?>" class="form-control">
         </div>
 
         <div class="col-12"><hr></div>
