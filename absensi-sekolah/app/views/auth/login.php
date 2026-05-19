@@ -15,7 +15,6 @@
     <div class="features">
       <div><i class="bi bi-camera-fill"></i> Absensi selfie + verifikasi wajah</div>
       <div><i class="bi bi-geo-alt-fill"></i> Validasi GPS lokasi sekolah</div>
-      <div><i class="bi bi-bar-chart-fill"></i> Laporan & rekap otomatis</div>
     </div>
   </aside>
 
