@@ -71,7 +71,7 @@
           <input type="text" name="longitude_kantor" value="<?= e(old('longitude_kantor', '115.17669738117321')) ?>" class="form-control">
         </div>
         <div class="col-md-4">
-          <label class="form-label">Radius (meter)</label>
+          <label class="form-label">Radius (Meter)</label>
           <input type="number" name="radius_meter" value="<?= e(old('radius_meter', 180)) ?>" class="form-control">
         </div>
 
