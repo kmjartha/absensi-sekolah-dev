@@ -116,7 +116,7 @@ class AbsensiController extends Controller
         $shiftId = (new UserShift())->defaultShiftId((int)$me['id']);
         $shift   = $shiftId ? (new Shift())->find($shiftId) : null;
 
-        $now = date('Y-m-d H:i:s');
+        $now = current_time();
 
         if ($type === 'masuk') {
             if ($today && $today['jam_masuk']) {
