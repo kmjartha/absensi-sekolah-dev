@@ -51,12 +51,6 @@
       <button type="submit" class="submit-btn">
         Masuk ke Dashboard <i class="bi bi-arrow-right ms-1"></i>
       </button>
-
-      <div class="hint">
-        <strong>Akun demo:</strong>
-        <code>HRD001</code>, <code>KEP001</code>, <code>GUR001</code>, <code>STF001</code>, <code>SEC001</code>
-        — password semua: <code>password123</code>
-      </div>
     </form>
   </main>
 </div>
