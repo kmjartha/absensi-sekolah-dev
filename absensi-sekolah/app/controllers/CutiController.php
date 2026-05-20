@@ -99,7 +99,13 @@ class CutiController extends Controller
         if ($file['size'] > $max) return null;
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime  = $finfo->file($file['tmp_name']);
-        $okMime = ['application/pdf'=>'pdf','image/jpeg'=>'jpg','image/png'=>'png'];
+        $okMime = [
+            'application/pdf' => 'pdf',
+            'image/jpeg'      => 'jpg',
+            'image/jpg'       => 'jpg',
+            'image/pjpeg'     => 'jpg',
+            'image/png'       => 'png',
+        ];
         if (!isset($okMime[$mime])) return null;
         $dir = UPLOADS_PATH . '/documents';
         if (!is_dir($dir)) mkdir($dir, 0775, true);
