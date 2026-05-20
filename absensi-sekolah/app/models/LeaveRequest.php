@@ -46,6 +46,25 @@ class LeaveRequest extends Model
         return $stmt->fetchAll();
     }
 
+    public function listForRoles(array $roleNames, ?string $status = null): array
+    {
+        if (empty($roleNames)) return [];
+        $placeholders = implode(',', array_fill(0, count($roleNames), '?'));
+        $sql = "SELECT lr.*, u.nama AS user_nama, u.niy AS user_niy, r.name AS user_role,
+                       v.nama AS verifier_nama
+                FROM leave_requests lr
+                JOIN users u  ON u.id = lr.user_id
+                JOIN roles r  ON r.id = u.role_id
+                LEFT JOIN users v ON v.id = lr.verified_by
+                WHERE r.name IN ($placeholders)";
+        $par = $roleNames;
+        if ($status) { $sql .= " AND lr.status = ?"; $par[] = $status; }
+        $sql .= " ORDER BY FIELD(lr.status,'pending','approved','rejected'), lr.created_at DESC";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute($par);
+        return $stmt->fetchAll();
+    }
+
     public function listForGuruOnly(?string $status = null): array
     {
         $sql = "SELECT lr.*, u.nama AS user_nama, u.niy AS user_niy, r.name AS user_role,

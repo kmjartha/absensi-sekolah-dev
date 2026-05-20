@@ -18,7 +18,8 @@ class VerifikasiController extends Controller
         if (has_role('HRD')) {
             $rows = $model->listAll($status);
         } elseif (has_role('Supervisor')) {
-            $rows = $model->listForRole('Manajerial', $status);
+            // Supervisor can verify Manajerial and HRD
+            $rows = $model->listForRoles(['Manajerial','HRD'], $status);
         } else {
             $rows = $model->listNonHrd($status);
         }
@@ -46,8 +47,8 @@ class VerifikasiController extends Controller
             return $this->redirect('/verifikasi-cuti');
         }
 
-        if (has_role('Supervisor') && $req['user_role'] !== 'Manajerial') {
-            $this->flash('error', 'Supervisor hanya dapat memverifikasi pengajuan dari role Manajerial.');
+        if (has_role('Supervisor') && !in_array($req['user_role'], ['Manajerial','HRD'], true)) {
+            $this->flash('error', 'Supervisor hanya dapat memverifikasi pengajuan dari role Manajerial atau HRD.');
             return $this->redirect('/verifikasi-cuti');
         }
 
