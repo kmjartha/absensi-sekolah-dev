@@ -81,6 +81,60 @@ class AuthController extends Controller
         return $this->redirect('/dashboard');
     }
 
+    public function profile(): string
+    {
+        $userModel = new User();
+        $u = $userModel->findWithRole((int)user()['id']);
+        if (!$u) {
+            $this->flash('error', 'Data pengguna tidak ditemukan.');
+            return $this->redirect('/dashboard');
+        }
+
+        return $this->render('auth.profile', [
+            'title' => 'Profil Saya',
+            'user'  => $u,
+        ]);
+    }
+
+    public function updatePassword(): string
+    {
+        $token = Csrf::fromRequest();
+        if (!Csrf::check($token)) {
+            $this->flash('error', 'Sesi kedaluwarsa. Silakan coba lagi.');
+            return $this->redirect('/profile');
+        }
+
+        $current = (string)($_POST['current_password'] ?? '');
+        $new = (string)($_POST['new_password'] ?? '');
+        $confirm = (string)($_POST['confirm_password'] ?? '');
+
+        if ($current === '' || $new === '' || $confirm === '') {
+            $this->flash('error', 'Semua field password harus diisi.');
+            return $this->redirect('/profile');
+        }
+
+        if ($new !== $confirm) {
+            $this->flash('error', 'Password baru dan konfirmasi tidak sama.');
+            return $this->redirect('/profile');
+        }
+
+        if (strlen($new) < 6) {
+            $this->flash('error', 'Password baru minimal 6 karakter.');
+            return $this->redirect('/profile');
+        }
+
+        $userModel = new User();
+        $u = $userModel->findWithRole((int)user()['id']);
+        if (!$u || !password_verify($current, $u['password'])) {
+            $this->flash('error', 'Password saat ini tidak cocok.');
+            return $this->redirect('/profile');
+        }
+
+        $userModel->update((int)$u['id'], ['password' => password_hash($new, PASSWORD_DEFAULT)]);
+        $this->flash('success', 'Password berhasil diperbarui.');
+        return $this->redirect('/profile');
+    }
+
     public function logout(): string
     {
         Session::destroy();

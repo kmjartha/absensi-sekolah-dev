@@ -38,10 +38,11 @@
                placeholder="Contoh: HRD001">
       </div>
 
-      <div class="form-field">
+      <div class="form-field password-field">
         <label for="password">Password</label>
         <input class="form-control-clean" type="password" id="password" name="password"
-               required placeholder="••••••••••">
+               required placeholder="••••••••••" data-password-toggle>
+        <button type="button" class="password-toggle-text" aria-label="Tampilkan password">Tampilkan password</button>
       </div>
 
       <div class="remember-row">
