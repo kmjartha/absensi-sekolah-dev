@@ -16,12 +16,11 @@ class VerifikasiController extends Controller
         $status = $_GET['status'] ?? null;
         $model  = new LeaveRequest();
         if (has_role('HRD')) {
-            $rows = $model->listAll($status);
+            $rows = $model->listForRoles(['Kepsek','Staff','Guru','Security'], $status);
         } elseif (has_role('Supervisor')) {
-            // Supervisor can verify Manajerial and HRD
-            $rows = $model->listForRoles(['Manajerial','HRD'], $status);
+            $rows = $model->listForRoles(['HRD','Manajerial'], $status);
         } else {
-            $rows = $model->listNonHrd($status);
+            $rows = $model->listForRoles(['Staff','Guru','Security'], $status);
         }
 
         return $this->render('verifikasi.index', [
@@ -42,19 +41,19 @@ class VerifikasiController extends Controller
         if (!$req) { $this->flash('error', 'Pengajuan tidak ditemukan.'); return $this->redirect('/verifikasi-cuti'); }
 
         // Kepsek hanya boleh approve/reject pengajuan non-HRD.
-        if (has_role('Kepsek') && $req['user_role'] === 'HRD') {
-            $this->flash('error', 'Anda tidak dapat memverifikasi pengajuan HRD.');
+        if (has_role('Kepsek') && !in_array($req['user_role'], ['Staff','Guru','Security'], true)) {
+            $this->flash('error', 'Kepsek hanya dapat memverifikasi pengajuan dari role Staff, Guru, atau Security.');
             return $this->redirect('/verifikasi-cuti');
         }
 
         if (has_role('Supervisor') && !in_array($req['user_role'], ['Manajerial','HRD'], true)) {
-            $this->flash('error', 'Supervisor hanya dapat memverifikasi pengajuan dari role Manajerial atau HRD.');
+            $this->flash('error', 'Supervisor hanya dapat memverifikasi pengajuan dari role HRD atau Manajerial.');
             return $this->redirect('/verifikasi-cuti');
         }
 
-        // HRD tidak boleh memverifikasi pengajuan HRD sendiri.
-        if (has_role('HRD') && $req['user_role'] === 'HRD') {
-            $this->flash('error', 'Pengajuan HRD hanya dapat diverifikasi oleh Supervisor.');
+        // HRD hanya dapat memverifikasi pengajuan dari Kepsek, Staff, Guru, atau Security.
+        if (has_role('HRD') && !in_array($req['user_role'], ['Kepsek','Staff','Guru','Security'], true)) {
+            $this->flash('error', 'HRD hanya dapat memverifikasi pengajuan dari role Kepsek, Staff, Guru, atau Security.');
             return $this->redirect('/verifikasi-cuti');
         }
 
