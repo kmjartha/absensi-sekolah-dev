@@ -39,6 +39,21 @@
   }
 })();
 
+// Password show/hide toggle
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.password-toggle-text');
+  if (!btn) return;
+  const field = btn.closest('.password-field');
+  if (!field) return;
+  const input = field.querySelector('[data-password-toggle]');
+  if (!input) return;
+
+  const isVisible = input.type === 'text';
+  input.type = isVisible ? 'password' : 'text';
+  btn.textContent = isVisible ? 'Tampilkan password' : 'Sembunyikan password';
+  btn.setAttribute('aria-label', isVisible ? 'Tampilkan password' : 'Sembunyikan password');
+});
+
 // SweetAlert2 confirm untuk semua form .form-confirm-delete
 document.addEventListener('submit', (e) => {
   const f = e.target.closest('.form-confirm-delete');

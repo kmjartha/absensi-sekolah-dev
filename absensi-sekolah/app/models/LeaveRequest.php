@@ -13,6 +13,23 @@ class LeaveRequest extends Model
         return $this->count("status = 'pending'");
     }
 
+    public function pendingCountForRoles(array $roleNames): int
+    {
+        if (empty($roleNames)) {
+            return 0;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($roleNames), '?'));
+        $sql = "SELECT COUNT(*) FROM {$this->table} lr
+                JOIN users u ON u.id = lr.user_id
+                JOIN roles r ON r.id = u.role_id
+                WHERE lr.status = ? AND r.name IN ({$placeholders})";
+        $params = array_merge(['pending'], $roleNames);
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute($params);
+        return (int)$stmt->fetchColumn();
+    }
+
     public function listAll(?string $status = null): array
     {
         $sql = "SELECT lr.*, u.nama AS user_nama, u.niy AS user_niy, r.name AS user_role,

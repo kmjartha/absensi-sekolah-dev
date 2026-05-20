@@ -97,6 +97,32 @@
 }
 .login-form .submit-btn:hover { transform: translateY(-1px); }
 
+.login-form .password-field {
+  position: relative;
+}
+
+.login-form .password-toggle-text {
+  margin-top: 0.35rem;
+  display: inline-flex;
+  justify-content: flex-end;
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+}
+
+.login-form .password-toggle-text:hover {
+  text-decoration: underline;
+}
+
+.login-form .password-field .form-control-clean:focus {
+  box-shadow: none;
+}
+
 .login-form .hint {
   margin-top: 1.5rem;
   padding: .85rem 1rem;

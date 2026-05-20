@@ -18,13 +18,7 @@
       <div class="role"><?= e($u['role_name']) ?> · NIY <?= e($u['niy']) ?></div>
     </div>
     <div class="mh-actions d-flex align-items-center gap-2">
-      <a href="<?= url('/notifikasi') ?>" class="mh-bell" title="Akun" aria-label="Notifikasi">
-        <i class="bi bi-bell-fill"></i>
-        <?php if ($unreadCount > 0): ?>
-          <span class="badge"><?= $unreadCount > 9 ? '9+' : $unreadCount ?></span>
-        <?php endif; ?>
-      </a>
-      <a href="<?= url('/logout') ?>" class="avatar" title="Logout">
+      <a href="<?= url('/profile') ?>" class="avatar" title="Profil Saya">
         <?= e(initials($u['nama'] ?? '?')) ?>
       </a>
     </div>

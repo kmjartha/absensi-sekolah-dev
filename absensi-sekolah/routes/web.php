@@ -21,6 +21,8 @@ $router->any('/logout', 'AuthController@logout', [AuthMiddleware::class]);
 
 // Dashboard
 $router->get('/dashboard', 'DashboardController@index', [AuthMiddleware::class]);
+$router->get('/profile', 'AuthController@profile', [AuthMiddleware::class]);
+$router->post('/profile/password', 'AuthController@updatePassword', [AuthMiddleware::class, CsrfMiddleware::class]);
 
 // ========= Master Karyawan (HRD) =========
 $router->get ('/karyawan',              'KaryawanController@index',   [AuthMiddleware::class]);

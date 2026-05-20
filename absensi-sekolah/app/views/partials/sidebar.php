@@ -53,6 +53,22 @@
       <div class="group-label">Pengelolaan</div>
       <a href="<?= url('/verifikasi-cuti') ?>" class="<?= is_active('/verifikasi-cuti') ?>">
         <i class="bi bi-check2-square"></i> Verifikasi Cuti
+        <?php
+          try {
+            $pendingCount = 0;
+            $leaveModel = new \App\Models\LeaveRequest();
+            if (has_role('HRD')) {
+              $pendingCount = $leaveModel->pendingCountForRoles(['Kepsek','Staff','Guru','Security']);
+            } elseif (has_role('Supervisor')) {
+              $pendingCount = $leaveModel->pendingCountForRoles(['HRD','Manajerial']);
+            } else {
+              $pendingCount = $leaveModel->pendingCountForRoles(['Staff','Guru','Security']);
+            }
+            if ($pendingCount > 0) {
+              echo '<span class="badge bg-danger ms-auto">'.($pendingCount > 9 ? '9+' : $pendingCount).'</span>';
+            }
+          } catch (\Throwable $e) {}
+        ?>
       </a>
     <?php endif; ?>
 
@@ -69,7 +85,7 @@
 
   <div class="sidebar-footer">
     <div class="sidebar-user">
-      <div class="avatar"><?= e(initials($u['nama'] ?? '?')) ?></div>
+      <a href="<?= url('/profile') ?>" class="avatar" title="Profil Saya"><?= e(initials($u['nama'] ?? '?')) ?></a>
       <div class="info">
         <div class="nm"><?= e($u['nama'] ?? '') ?></div>
         <div class="rl"><?= e($u['role_name'] ?? '') ?> &middot; <?= e($u['niy'] ?? '') ?></div>
