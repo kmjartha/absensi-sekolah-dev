@@ -102,13 +102,14 @@
 }
 
 .login-form .password-toggle-text {
-  margin-top: 0.5rem;
-  display: block;
-  text-align: right;
+  margin-top: 0.35rem;
+  display: inline-flex;
+  justify-content: flex-end;
+  width: 100%;
   border: none;
   background: transparent;
   color: var(--primary);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
   padding: 0;
   cursor: pointer;
