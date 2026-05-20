@@ -3,7 +3,11 @@
     <h2 class="mb-1">Cuti / Sakit</h2>
     <div class="text-muted-soft">Sisa cuti tahunan Anda: <strong><?= (int)$me['jumlah_cuti'] ?> hari</strong></div>
   </div>
-  <a href="<?= url('/cuti/create') ?>" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Ajukan Baru</a>
+  <?php if (!has_role('Supervisor')): ?>
+    <a href="<?= url('/cuti/create') ?>" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Ajukan Baru</a>
+  <?php else: ?>
+    <div class="text-muted-soft">Supervisor hanya dapat melihat riwayat cuti dan tidak dapat menambahkan pengajuan baru.</div>
+  <?php endif; ?>
 </div>
 
 <?php if (empty($rows)): ?>

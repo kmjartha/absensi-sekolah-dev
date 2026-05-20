@@ -2,7 +2,13 @@
   <div>
     <h2 class="mb-1">Verifikasi Cuti</h2>
     <div class="text-muted-soft">
-      <?= has_role('HRD') ? 'Semua pengajuan dari seluruh karyawan' : 'Pengajuan dari Guru saja' ?>
+      <?php if (has_role('HRD')): ?>
+        Semua pengajuan dari seluruh karyawan
+      <?php elseif (has_role('Supervisor')): ?>
+        Supervisor hanya melihat pengajuan Manajerial
+      <?php else: ?>
+        Pengajuan dari karyawan non-HRD
+      <?php endif; ?>
     </div>
   </div>
   <div class="btn-group">

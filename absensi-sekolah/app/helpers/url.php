@@ -57,6 +57,31 @@ if (!function_exists('is_active')) {
     function is_active(string $pattern, string $class = 'active'): string
     {
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+        // Remove script directory prefix so routes work when app is in subfolder
+        $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+        if ($scriptDir !== '' && $scriptDir !== '/' && str_starts_with($uri, $scriptDir)) {
+            $uri = substr($uri, strlen($scriptDir));
+            if ($uri === '') $uri = '/';
+        }
         return str_starts_with($uri, $pattern) ? $class : '';
+    }
+}
+
+if (!function_exists('is_active_exact')) {
+    function is_active_exact(string $pattern, string $class = 'active'): string
+    {
+        $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+        // Remove script directory prefix (same logic as is_active)
+        $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+        if ($scriptDir !== '' && $scriptDir !== '/' && str_starts_with($uri, $scriptDir)) {
+            $uri = substr($uri, strlen($scriptDir));
+            if ($uri === '') $uri = '/';
+        }
+        // Normalize by trimming trailing slashes so "/absensi" and "/absensi/" match
+        $u = rtrim($uri, '/');
+        $p = rtrim($pattern, '/');
+        if ($u === '') $u = '/';
+        if ($p === '') $p = '/';
+        return $u === $p ? $class : '';
     }
 }

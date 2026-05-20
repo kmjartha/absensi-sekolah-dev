@@ -12,9 +12,17 @@ use App\Models\Announcement;
 
 class AbsensiController extends Controller
 {
+    private function forbidSupervisorSubmit(): string
+    {
+        if (!has_role('Supervisor')) return '';
+        http_response_code(403);
+        return $this->render('errors.403', ['title' => '403'], 'auth');
+    }
+
     /** GET /absensi — form selfie + GPS */
     public function form(): string
     {
+        if ($resp = $this->forbidSupervisorSubmit()) return $resp;
         $u          = user();
         $userModel  = new User();
         $full       = $userModel->findWithRole((int)$u['id']);
@@ -45,6 +53,7 @@ class AbsensiController extends Controller
     /** POST /absensi/submit — AJAX */
     public function submit(): string
     {
+        if ($resp = $this->forbidSupervisorSubmit()) return $resp;
         header('Content-Type: application/json');
 
         $u          = user();

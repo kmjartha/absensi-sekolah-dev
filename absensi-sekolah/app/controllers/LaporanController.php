@@ -11,7 +11,14 @@ class LaporanController extends Controller
     /** GET /laporan — auto-pilih general (HRD/Kepsek) atau personal (pegawai) */
     public function index(): string
     {
-        return has_role('HRD','Kepsek') ? $this->general() : $this->personal();
+        if (has_role('HRD','Kepsek')) {
+            return $this->general();
+        }
+        if (is_pegawai()) {
+            return $this->personal();
+        }
+        http_response_code(403);
+        return $this->render('errors.403', ['title'=>'403'], 'auth');
     }
 
     /** General rekap (HRD/Kepsek) */

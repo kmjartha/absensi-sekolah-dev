@@ -14,8 +14,8 @@
       <i class="bi bi-grid-1x2-fill"></i> Dashboard
     </a>
 
-    <?php if (in_array($role, ['Guru','Staff','Security','Kepsek'], true)): ?>
-      <a href="<?= url('/absensi') ?>" class="<?= is_active('/absensi') ?>">
+    <?php if (in_array($role, ['HRD','Guru','Staff','Security','Kepsek','Manajerial'], true)): ?>
+      <a href="<?= url('/absensi') ?>" class="<?= is_active_exact('/absensi') ?>">
         <i class="bi bi-camera-fill"></i> Absensi
       </a>
       <a href="<?= url('/absensi/riwayat') ?>" class="<?= is_active('/absensi/riwayat') ?>">
@@ -36,7 +36,7 @@
       ?>
     </a>
 
-    <?php if ($role === 'HRD'): ?>
+    <?php if (in_array($role, ['HRD','Supervisor'], true)): ?>
       <div class="group-label">Master Data</div>
       <a href="<?= url('/karyawan') ?>" class="<?= is_active('/karyawan') ?>">
         <i class="bi bi-people-fill"></i> Karyawan
@@ -49,11 +49,14 @@
       </a>
     <?php endif; ?>
 
-    <?php if (in_array($role, ['HRD','Kepsek'], true)): ?>
+    <?php if (in_array($role, ['HRD','Supervisor','Kepsek'], true)): ?>
       <div class="group-label">Pengelolaan</div>
       <a href="<?= url('/verifikasi-cuti') ?>" class="<?= is_active('/verifikasi-cuti') ?>">
         <i class="bi bi-check2-square"></i> Verifikasi Cuti
       </a>
+    <?php endif; ?>
+
+    <?php if (in_array($role, ['HRD','Kepsek'], true)): ?>
       <?php $__uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH); ?>
       <a href="<?= url('/laporan/general') ?>" class="<?= ($__uri==='/laporan' || str_starts_with($__uri, '/laporan/general')) ? 'active' : '' ?>">
         <i class="bi bi-bar-chart-fill"></i> Laporan Rekap

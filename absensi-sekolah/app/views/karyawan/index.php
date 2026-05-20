@@ -4,9 +4,13 @@
     <h2 class="mb-0">Master Karyawan</h2>
     <small class="text-muted-soft">Kelola data semua karyawan sekolah, termasuk foto wajah untuk facial recognition.</small>
   </div>
-  <a href="<?= url('/karyawan/create') ?>" class="btn btn-primary">
-    <i class="bi bi-plus-lg"></i> Tambah Karyawan
-  </a>
+  <?php if (!has_role('Supervisor')): ?>
+    <a href="<?= url('/karyawan/create') ?>" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Tambah Karyawan
+    </a>
+  <?php else: ?>
+    <div class="text-muted-soft">Supervisor hanya dapat melihat daftar dan detail karyawan.</div>
+  <?php endif; ?>
 </div>
 
 <div class="card-soft p-0">
@@ -55,11 +59,13 @@
           </td>
           <td class="text-end">
             <a href="<?= url('/karyawan/' . $u['id']) ?>" class="btn btn-sm btn-light"><i class="bi bi-eye"></i></a>
-            <a href="<?= url('/karyawan/' . $u['id'] . '/edit') ?>" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a>
-            <form method="post" action="<?= url('/karyawan/' . $u['id'] . '/delete') ?>" class="d-inline form-confirm-delete">
-              <?= csrf_field() ?>
-              <button type="submit" class="btn btn-sm btn-light text-danger"><i class="bi bi-trash"></i></button>
-            </form>
+            <?php if (!has_role('Supervisor')): ?>
+              <a href="<?= url('/karyawan/' . $u['id'] . '/edit') ?>" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a>
+              <form method="post" action="<?= url('/karyawan/' . $u['id'] . '/delete') ?>" class="d-inline form-confirm-delete">
+                <?= csrf_field() ?>
+                <button type="submit" class="btn btn-sm btn-light text-danger"><i class="bi bi-trash"></i></button>
+              </form>
+            <?php endif; ?>
           </td>
         </tr>
       <?php endforeach; ?>

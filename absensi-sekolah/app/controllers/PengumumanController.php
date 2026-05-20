@@ -17,9 +17,18 @@ class PengumumanController extends Controller
         }
     }
 
+    private function guardView(): void
+    {
+        if (!has_role('HRD', 'Kepsek', 'Supervisor')) {
+            http_response_code(403);
+            echo $this->view->render('errors/403', ['title' => '403'], 'auth');
+            exit;
+        }
+    }
+
     public function index(): string
     {
-        $this->guard();
+        $this->guardView();
         return $this->render('pengumuman.index', [
             'title' => 'Pengumuman',
             'items' => (new Announcement())->allWithCreator(),

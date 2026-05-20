@@ -31,7 +31,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `roles` (`id`,`name`) VALUES
-  (1,'HRD'), (2,'Kepsek'), (3,'Guru'), (4,'Staff'), (5,'Security');
+  (1,'HRD'), (2,'Kepsek'), (3,'Guru'), (4,'Staff'), (5,'Security'), (6,'Supervisor');
 
 -- ================== users ==================
 CREATE TABLE `users` (
@@ -60,6 +60,7 @@ CREATE TABLE `users` (
 INSERT INTO `users`
 (`niy`,`nama`,`jabatan`,`role_id`,`email`,`phone`,`foto_profile`,`face_descriptor`,`jumlah_cuti`,`latitude_kantor`,`longitude_kantor`,`radius_meter`,`password`,`is_active`) VALUES
 ('HRD001','Rina Oktaviani, S.E.','Kepala HRD',1,'rina.hrd@sekolah.id','081234567001',NULL,NULL,12,-6.2000000,106.8166700,150,'$2y$10$lcA2slSt0pvPe2gGheiT9.0856D0OfMk/24nIsD9RR3O.g94iYUq2',1),
+('SUP001','Agus Supervisor','Supervisor',6,'agus.supervisor@sekolah.id','081234567011',NULL,NULL,18,-6.2000000,106.8166700,150,'$2y$10$lcA2slSt0pvPe2gGheiT9.0856D0OfMk/24nIsD9RR3O.g94iYUq2',1),
 ('KEP001','Drs. Budi Santoso, M.Pd','Kepala Sekolah',2,'budi.kep@sekolah.id','081234567002',NULL,NULL,18,-6.2000000,106.8166700,150,'$2y$10$lcA2slSt0pvPe2gGheiT9.0856D0OfMk/24nIsD9RR3O.g94iYUq2',1),
 ('GUR001','Siti Aminah, S.Pd','Guru Matematika',3,'siti@sekolah.id','081234567003',NULL,NULL,12,-6.2000000,106.8166700,150,'$2y$10$lcA2slSt0pvPe2gGheiT9.0856D0OfMk/24nIsD9RR3O.g94iYUq2',1),
 ('GUR002','Ahmad Fauzi, S.Pd','Guru Bahasa Indonesia',3,'ahmad@sekolah.id','081234567004',NULL,NULL,12,-6.2000000,106.8166700,150,'$2y$10$lcA2slSt0pvPe2gGheiT9.0856D0OfMk/24nIsD9RR3O.g94iYUq2',1),

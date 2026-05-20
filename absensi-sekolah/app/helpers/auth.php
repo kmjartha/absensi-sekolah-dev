@@ -31,7 +31,7 @@ if (!function_exists('has_role')) {
 if (!function_exists('is_pegawai')) {
     function is_pegawai(): bool
     {
-        return has_role('Guru', 'Staff', 'Security');
+        return has_role('Guru', 'Staff', 'Security', 'Manajerial');
     }
 }
 
