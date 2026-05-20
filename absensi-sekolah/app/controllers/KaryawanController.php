@@ -13,6 +13,15 @@ class KaryawanController extends Controller
 {
     private function guard(): void
     {
+        if (!has_role('HRD')) {
+            http_response_code(403);
+            echo $this->view->render('errors/403', ['title' => '403'], 'auth');
+            exit;
+        }
+    }
+
+    private function guardView(): void
+    {
         if (!has_role('HRD', 'Supervisor')) {
             http_response_code(403);
             echo $this->view->render('errors/403', ['title' => '403'], 'auth');
@@ -22,7 +31,7 @@ class KaryawanController extends Controller
 
     public function index(): string
     {
-        $this->guard();
+        $this->guardView();
         $users = (new User())->allWithRole();
         return $this->render('karyawan.index', [
             'title'    => 'Master Karyawan',
@@ -108,7 +117,7 @@ class KaryawanController extends Controller
 
     public function show(string $id): string
     {
-        $this->guard();
+        $this->guardView();
         $user = (new User())->findWithRole((int)$id);
         if (!$user) return $this->notFound();
         $userShifts = (new UserShift())->shiftsFor((int)$id);

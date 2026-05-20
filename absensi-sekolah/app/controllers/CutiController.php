@@ -10,6 +10,20 @@ use App\Models\User;
 
 class CutiController extends Controller
 {
+    private function forbidSupervisor(): string
+    {
+        if (!has_role('Supervisor')) return '';
+        http_response_code(403);
+        return $this->render('errors.403', ['title' => '403'], 'auth');
+    }
+
+    private function forbidSupervisorSubmit(): string
+    {
+        if (!has_role('Supervisor')) return '';
+        http_response_code(403);
+        return $this->render('errors.403', ['title' => '403'], 'auth');
+    }
+
     /** GET /cuti — riwayat pengajuan personal + tombol ajukan */
     public function index(): string
     {
@@ -27,6 +41,7 @@ class CutiController extends Controller
     /** GET /cuti/create */
     public function create(): string
     {
+        if ($resp = $this->forbidSupervisorSubmit()) return $resp;
         $u  = user();
         $me = (new User())->find((int)$u['id']);
         $layout = is_pegawai() ? 'mobile' : 'app';
@@ -39,6 +54,7 @@ class CutiController extends Controller
     /** POST /cuti/create */
     public function store(): string
     {
+        if ($resp = $this->forbidSupervisorSubmit()) return $resp;
         $jenis  = $_POST['jenis'] ?? '';
         $start  = $_POST['tanggal_mulai'] ?? '';
         $end    = $_POST['tanggal_selesai'] ?? '';

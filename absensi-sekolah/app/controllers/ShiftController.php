@@ -10,6 +10,15 @@ class ShiftController extends Controller
 {
     private function guard(): void
     {
+        if (!has_role('HRD')) {
+            http_response_code(403);
+            echo $this->view->render('errors/403', ['title' => '403'], 'auth');
+            exit;
+        }
+    }
+
+    private function guardView(): void
+    {
         if (!has_role('HRD', 'Supervisor')) {
             http_response_code(403);
             echo $this->view->render('errors/403', ['title' => '403'], 'auth');
@@ -19,7 +28,7 @@ class ShiftController extends Controller
 
     public function index(): string
     {
-        $this->guard();
+        $this->guardView();
         return $this->render('shift.index', [
             'title'  => 'Master Shift Kerja',
             'shifts' => (new Shift())->all('jam_masuk ASC'),

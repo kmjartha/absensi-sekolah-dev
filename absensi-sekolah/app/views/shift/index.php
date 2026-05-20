@@ -3,9 +3,13 @@
     <h2 class="mb-0">Master Shift Kerja</h2>
     <small class="text-muted-soft">Atur jam masuk/keluar, toleransi keterlambatan, dan tanggal cut-off bulanan.</small>
   </div>
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-shift-create">
-    <i class="bi bi-plus-lg"></i> Tambah Shift
-  </button>
+  <?php if (has_role('HRD')): ?>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-shift-create">
+      <i class="bi bi-plus-lg"></i> Tambah Shift
+    </button>
+  <?php else: ?>
+    <div class="text-muted-soft">Supervisor hanya dapat melihat daftar shift.</div>
+  <?php endif; ?>
 </div>
 
 <div class="row g-3">
@@ -28,22 +32,24 @@
         <div><i class="bi bi-stopwatch text-danger"></i> Toleransi <strong><?= (int)$s['toleransi_menit'] ?> mnt</strong></div>
       </div>
 
-      <div class="d-flex gap-2">
-        <button class="btn btn-light flex-grow-1 btn-edit-shift"
-                data-id="<?= $s['id'] ?>"
-                data-nama="<?= e($s['nama']) ?>"
-                data-masuk="<?= substr($s['jam_masuk'],0,5) ?>"
-                data-keluar="<?= substr($s['jam_keluar'],0,5) ?>"
-                data-tol="<?= (int)$s['toleransi_menit'] ?>"
-                data-cut="<?= (int)$s['cut_off_tanggal'] ?>"
-                data-active="<?= (int)$s['is_active'] ?>">
-          <i class="bi bi-pencil"></i> Edit
-        </button>
-        <form method="post" action="<?= url('/shift/' . $s['id'] . '/delete') ?>" class="form-confirm-delete">
-          <?= csrf_field() ?>
-          <button type="submit" class="btn btn-light text-danger"><i class="bi bi-trash"></i></button>
-        </form>
-      </div>
+      <?php if (has_role('HRD')): ?>
+        <div class="d-flex gap-2">
+          <button class="btn btn-light flex-grow-1 btn-edit-shift"
+                  data-id="<?= $s['id'] ?>"
+                  data-nama="<?= e($s['nama']) ?>"
+                  data-masuk="<?= substr($s['jam_masuk'],0,5) ?>"
+                  data-keluar="<?= substr($s['jam_keluar'],0,5) ?>"
+                  data-tol="<?= (int)$s['toleransi_menit'] ?>"
+                  data-cut="<?= (int)$s['cut_off_tanggal'] ?>"
+                  data-active="<?= (int)$s['is_active'] ?>">
+            <i class="bi bi-pencil"></i> Edit
+          </button>
+          <form method="post" action="<?= url('/shift/' . $s['id'] . '/delete') ?>" class="form-confirm-delete">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-light text-danger"><i class="bi bi-trash"></i></button>
+          </form>
+        </div>
+      <?php endif; ?>
     </div>
   </div>
 <?php endforeach; ?>

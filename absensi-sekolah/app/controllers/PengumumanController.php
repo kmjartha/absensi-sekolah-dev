@@ -10,7 +10,16 @@ class PengumumanController extends Controller
 {
     private function guard(): void
     {
-        if (!has_role('HRD', 'Supervisor', 'Kepsek')) {
+        if (!has_role('HRD', 'Kepsek')) {
+            http_response_code(403);
+            echo $this->view->render('errors/403', ['title' => '403'], 'auth');
+            exit;
+        }
+    }
+
+    private function guardView(): void
+    {
+        if (!has_role('HRD', 'Kepsek', 'Supervisor')) {
             http_response_code(403);
             echo $this->view->render('errors/403', ['title' => '403'], 'auth');
             exit;
@@ -19,7 +28,7 @@ class PengumumanController extends Controller
 
     public function index(): string
     {
-        $this->guard();
+        $this->guardView();
         return $this->render('pengumuman.index', [
             'title' => 'Pengumuman',
             'items' => (new Announcement())->allWithCreator(),

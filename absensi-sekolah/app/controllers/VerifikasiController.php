@@ -15,9 +15,13 @@ class VerifikasiController extends Controller
 
         $status = $_GET['status'] ?? null;
         $model  = new LeaveRequest();
-        $rows   = has_role('HRD','Supervisor')
-            ? $model->listAll($status)
-            : $model->listNonHrd($status);
+        if (has_role('HRD')) {
+            $rows = $model->listAll($status);
+        } elseif (has_role('Supervisor')) {
+            $rows = $model->listForRole('Manajerial', $status);
+        } else {
+            $rows = $model->listNonHrd($status);
+        }
 
         return $this->render('verifikasi.index', [
             'title'  => 'Verifikasi Cuti',
@@ -42,8 +46,13 @@ class VerifikasiController extends Controller
             return $this->redirect('/verifikasi-cuti');
         }
 
-        // HRD tidak boleh memverifikasi pengajuan HRD sendiri; Supervisor yang memverifikasi HRD.
-        if (has_role('HRD') && !has_role('Supervisor') && $req['user_role'] === 'HRD') {
+        if (has_role('Supervisor') && $req['user_role'] !== 'Manajerial') {
+            $this->flash('error', 'Supervisor hanya dapat memverifikasi pengajuan dari role Manajerial.');
+            return $this->redirect('/verifikasi-cuti');
+        }
+
+        // HRD tidak boleh memverifikasi pengajuan HRD sendiri.
+        if (has_role('HRD') && $req['user_role'] === 'HRD') {
             $this->flash('error', 'Pengajuan HRD hanya dapat diverifikasi oleh Supervisor.');
             return $this->redirect('/verifikasi-cuti');
         }
