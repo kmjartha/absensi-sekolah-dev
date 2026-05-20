@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $role = user_role();
         $announcements = (new Announcement())->published(5);
 
-        if ($role === 'HRD')    return $this->renderHrd($announcements);
+        if (in_array($role, ['HRD','Supervisor'], true)) return $this->renderHrd($announcements);
         if ($role === 'Kepsek') return $this->renderKepsek($announcements);
         return $this->renderPegawai($announcements);
     }
@@ -34,6 +34,7 @@ class DashboardController extends Controller
                 'pending_cuti'   => $leave->pendingCount(),
             ],
             'trend7'        => $attendance->last7DaysCounts(7),
+            'today'         => $attendance->todayFor((int)user()['id']),
             'announcements' => $announcements,
         ]);
     }

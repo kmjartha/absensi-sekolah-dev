@@ -30,8 +30,27 @@
   </div>
 </div>
 
-<div class="row g-3">
-  <div class="col-lg-8">
+<div class="row g-3 mb-4">
+  <div class="col-lg-6">
+    <div class="card-soft">
+      <h3 class="mb-3">Absensi Pribadi Hari Ini</h3>
+      <?php if (!$today): ?>
+        <div class="empty-state">
+          <i class="bi bi-camera"></i>
+          <div>Anda belum melakukan absensi masuk.</div>
+          <a href="<?= url('/absensi') ?>" class="btn btn-primary mt-3"><i class="bi bi-camera-fill"></i> Absen sekarang</a>
+        </div>
+      <?php else: ?>
+        <p>Jam masuk: <strong><?= e(time_only($today['jam_masuk'])) ?></strong></p>
+        <p>Jam keluar: <strong><?= e($today['jam_keluar'] ? time_only($today['jam_keluar']) : '-') ?></strong></p>
+        <p>Status: <?= status_badge($today['status']) ?></p>
+        <?php if (!$today['jam_keluar'] && $today['jam_masuk']): ?>
+          <a href="<?= url('/absensi') ?>" class="btn btn-outline-primary mt-3">Absen pulang</a>
+        <?php endif; ?>
+      <?php endif; ?>
+    </div>
+  </div>
+  <div class="col-lg-6">
     <div class="card-soft">
       <h3 class="mb-3">Trend Kehadiran 7 Hari Terakhir</h3>
       <canvas id="trendChart" height="110"></canvas>
