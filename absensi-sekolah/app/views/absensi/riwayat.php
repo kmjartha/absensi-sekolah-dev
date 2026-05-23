@@ -78,6 +78,12 @@ $bulan = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
         </div>
         <div class="r-meta">
           <?= status_badge($r['status']) ?>
+          <?php if ((int)$r['terlambat_menit'] > 0): ?>
+            <div class="text-warning mt-1" style="font-size:.78rem"><i class="bi bi-clock-fill"></i> Telat <?= (int)$r['terlambat_menit'] ?> menit</div>
+          <?php endif; ?>
+          <?php if (!empty($r['keterangan'])): ?>
+            <div class="text-muted-soft mt-1" style="font-size:.78rem"><i class="bi bi-chat-left-text"></i> <?= e($r['keterangan']) ?></div>
+          <?php endif; ?>
           <?php if ($r['lat_masuk']!==null && $r['lng_masuk']!==null): ?>
             <a class="d-block mt-1" target="_blank" rel="noopener"
                href="https://www.google.com/maps?q=<?= urlencode($r['lat_masuk'].','.$r['lng_masuk']) ?>">

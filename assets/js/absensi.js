@@ -166,19 +166,92 @@
 
   btn.addEventListener('click', async () => {
     if (btn.disabled) return;
+
+    const foto = captureBase64();
+    const now = new Date();
+    const currentDate = now.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    let lateMinutes = 0;
+    const isLate = type === 'masuk' && cfg.shiftStart && typeof cfg.shiftTolerance === 'number'
+      ? (() => {
+          const parts = String(cfg.shiftStart).split(':').map(Number);
+          if (parts.length < 2 || parts.some(Number.isNaN)) return false;
+          const shiftDate = new Date();
+          shiftDate.setHours(parts[0], parts[1] + cfg.shiftTolerance, 0, 0);
+          const diffMs = now.getTime() - shiftDate.getTime();
+          lateMinutes = diffMs > 0 ? Math.ceil(diffMs / 60000) : 0;
+          return diffMs > 0;
+        })()
+      : false;
+
+    let reason = null;
+    if (isLate) {
+      const result = await Swal.fire({
+        title: 'Terjadi keterlambatan',
+        icon: 'warning',
+        width: 'min(600px, calc(100vw - 24px))',
+        padding: '1.2rem 1.3rem',
+        html: `
+          <div class="swal2-absen-grid">
+            <div class="swal2-absen-card">
+              <div class="swal2-absen-card-title">Rincian absensi</div>
+              <div class="swal2-absen-meta">
+                <div><span>Tanggal:</span> ${currentDate}</div>
+                <div><span>Waktu absen masuk:</span> ${currentTime}</div>
+                <div><span>Shift mulai:</span> ${cfg.shiftStart || '—'}</div>
+                <div><span>Menit keterlambatan:</span> <strong>${lateMinutes} menit</strong></div>
+              </div>
+            </div>
+            <div class="swal2-absen-img">
+              <img src="${foto}" alt="Foto terlambat" />
+            </div>
+            <textarea id="swalLateReason" class="swal2-absen-textarea" placeholder="Jelaskan alasan keterlambatan Anda..."></textarea>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Simpan Absen',
+        cancelButtonText: 'Batal',
+        focusConfirm: false,
+        showCloseButton: false,
+        customClass: {
+          popup: 'swal2-absen-full',
+          actions: 'swal2-absen-actions',
+          confirmButton: 'swal2-absen-confirm',
+          cancelButton: 'swal2-absen-cancel'
+        },
+        buttonsStyling: false,
+        preConfirm: () => {
+          const val = document.getElementById('swalLateReason')?.value.trim();
+          if (!val) {
+            Swal.showValidationMessage('Alasan terlambat harus diisi.');
+          }
+          return val;
+        },
+        didOpen: () => {
+          const input = Swal.getPopup().querySelector('#swalLateReason');
+          if (input) input.focus();
+        }
+      });
+      if (!result.isConfirmed || !result.value) {
+        return;
+      }
+      reason = result.value;
+    }
+
     btn.disabled = true;
     const oldHtml = btn.innerHTML;
     btn.innerHTML = '<i class="bi bi-hourglass-split"></i> <span>Mengirim…</span>';
 
-    const foto = captureBase64();
+    const fotoData = foto;
     const fd = new FormData();
     fd.append('_csrf', cfg.csrf);
     fd.append('type', type);
-    fd.append('foto', foto);
+    fd.append('foto', fotoData);
     fd.append('lat', gps.lat);
     fd.append('lng', gps.lng);
     if (lastDistance !== null) fd.append('face_distance', lastDistance);
     if (lastDescriptor)        fd.append('descriptor', JSON.stringify(lastDescriptor));
+    if (reason)                 fd.append('keterangan', reason);
 
     try {
       const res = await fetch(cfg.submitUrl, {

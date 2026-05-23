@@ -76,7 +76,7 @@ $totalHari = array_sum(array_map('intval', $summary));
   <table class="table align-middle mb-0">
     <thead style="background:var(--surface-2)">
       <tr>
-        <th>Tanggal</th><th>Shift</th><th>Masuk</th><th>Pulang</th>
+        <th>Tanggal</th><th>Shift</th><th>Masuk</th><th>Menit Telat</th><th>Pulang</th>
         <th class="text-center">Status</th><th class="text-end">Match</th>
       </tr>
     </thead>
@@ -89,6 +89,7 @@ $totalHari = array_sum(array_map('intval', $summary));
           <td><?= e(format_date_id($h['tanggal'])) ?></td>
           <td class="text-muted-soft"><?= e($h['shift_nama'] ?? '-') ?></td>
           <td><?= e(time_only($h['jam_masuk'])) ?></td>
+          <td class="text-center"><?= isset($h['terlambat_menit']) && $h['terlambat_menit']!==null ? (int)$h['terlambat_menit'] : '—' ?></td>
           <td><?= $h['jam_keluar'] ? e(time_only($h['jam_keluar'])) : '—' ?></td>
           <td class="text-center"><?= status_badge($h['status']) ?></td>
           <td class="text-end text-muted-soft">

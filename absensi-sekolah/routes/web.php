@@ -68,6 +68,7 @@ $router->get ("/laporan/personal",              "LaporanController@personal",   
 $router->get ("/laporan/general",               "LaporanController@general",        [AuthMiddleware::class]);
 $router->get ("/laporan/karyawan",              "LaporanController@karyawan",       [AuthMiddleware::class]);
 $router->get ("/laporan/karyawan/{id}",         "LaporanController@karyawanDetail", [AuthMiddleware::class]);
+$router->get ("/laporan/harian",                "LaporanController@harian",        [AuthMiddleware::class]);
 $router->get ("/laporan/karyawan/{id}/export",  "LaporanController@karyawanExport", [AuthMiddleware::class]);
 $router->get ("/laporan/export",                "LaporanController@export",         [AuthMiddleware::class]);
 

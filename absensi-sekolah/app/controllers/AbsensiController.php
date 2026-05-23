@@ -138,6 +138,10 @@ class AbsensiController extends Controller
                 $batas = $jamMasukShift + ((int)$shift['toleransi_menit']) * 60;
                 if (time() > $batas) $status = 'telat';
             }
+            $reason = trim($_POST['keterangan'] ?? '');
+            if ($status === 'telat' && $reason === '') {
+                return $this->json(['success'=>false,'message'=>'Alasan terlambat harus diisi.']);
+            }
             $data = [
                 'user_id'          => $me['id'],
                 'shift_id'         => $shiftId,
@@ -148,6 +152,7 @@ class AbsensiController extends Controller
                 'lng_masuk'        => $lng,
                 'face_match_masuk' => $score,
                 'status'           => $status,
+                'keterangan'       => $reason ?: null,
             ];
             $attModel->create($data);
             return $this->json([

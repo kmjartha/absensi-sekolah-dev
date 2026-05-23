@@ -65,7 +65,7 @@ class LaporanController extends Controller
         }
 
         return $this->render('laporan.karyawan', [
-            'title' => 'Laporan per Karyawan',
+            'title' => 'Laporan Karyawan',
             'rows'  => $rows,
             'month' => $month,
             'year'  => $year,
@@ -121,6 +121,24 @@ class LaporanController extends Controller
         ]);
     }
 
+    /** GET /laporan/harian — daftar absensi per tanggal (HRD) */
+    public function harian(): string
+    {
+        if (!has_role('HRD','Kepsek')) {
+            http_response_code(403);
+            return $this->render('errors.403', ['title'=>'403'], 'auth');
+        }
+        $date = trim((string)($_GET['date'] ?? date('Y-m-d')));
+        $att = new Attendance();
+        $rows = $att->dailyReport($date);
+
+        return $this->render('laporan.harian', [
+            'title' => 'Laporan Harian',
+            'date'  => $date,
+            'rows'  => $rows,
+        ]);
+    }
+
     /** Personal pegawai */
     public function personal(): string
     {
@@ -160,7 +178,20 @@ class LaporanController extends Controller
         }
         $month = (int)($_GET['month'] ?? date('n'));
         $year  = (int)($_GET['year']  ?? date('Y'));
+        $q     = trim((string)($_GET['q'] ?? ''));
+        $role  = trim((string)($_GET['role'] ?? ''));
         $rows  = (new Attendance())->rekapPeriode($month, $year);
+
+        if ($q !== '') {
+            $needle = mb_strtolower($q);
+            $rows = array_values(array_filter($rows, fn($r) =>
+                str_contains(mb_strtolower($r['nama']), $needle) ||
+                str_contains(mb_strtolower($r['niy']), $needle)
+            ));
+        }
+        if ($role !== '') {
+            $rows = array_values(array_filter($rows, fn($r) => $r['role_name'] === $role));
+        }
 
         $bulan = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
         $fname = "Laporan_Absensi_{$bulan[$month]}_{$year}.xls";
@@ -233,16 +264,17 @@ class LaporanController extends Controller
               . '<td>'.array_sum(array_map('intval', $sum)).'</td>'
               . '</tr></tbody></table>';
 
-        $html .= '<h3>Detail Harian</h3><table><thead><tr>'
-              . '<th>Tanggal</th><th>Shift</th><th>Jam Masuk</th><th>Jam Keluar</th>'
+          $html .= '<h3>Detail Harian</h3><table><thead><tr>'
+              . '<th>Tanggal</th><th>Shift</th><th>Jam Masuk</th><th>Menit Telat</th><th>Jam Keluar</th>'
               . '<th>Status</th><th>Match Score</th>'
               . '</tr></thead><tbody>';
         foreach ($hist as $h) {
             $html .= '<tr>'
                   . '<td>'.htmlspecialchars($h['tanggal']).'</td>'
                   . '<td>'.htmlspecialchars((string)($h['shift_nama'] ?? '-')).'</td>'
-                  . '<td>'.htmlspecialchars((string)($h['jam_masuk'] ?? '-')).'</td>'
-                  . '<td>'.htmlspecialchars((string)($h['jam_keluar'] ?? '-')).'</td>'
+                . '<td>'.htmlspecialchars((string)($h['jam_masuk'] ?? '-')).'</td>'
+                . '<td>'.(isset($h['terlambat_menit']) && $h['terlambat_menit']!==null ? (int)$h['terlambat_menit'] : '-').'</td>'
+                . '<td>'.htmlspecialchars((string)($h['jam_keluar'] ?? '-')).'</td>'
                   . '<td>'.htmlspecialchars(strtoupper($h['status'])).'</td>'
                   . '<td>'.(isset($h['face_match_score']) && $h['face_match_score']!==null
                             ? number_format((float)$h['face_match_score'],3) : '-').'</td>'

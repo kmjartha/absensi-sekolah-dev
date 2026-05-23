@@ -35,7 +35,7 @@
         <label for="niy">NIY</label>
         <input class="form-control-clean" type="text" id="niy" name="niy"
                value="<?= e($old_niy ?? '') ?>" required autofocus
-               placeholder="Contoh: HRD001">
+               placeholder="Contoh: 01520052018">
       </div>
 
       <div class="form-field password-field">

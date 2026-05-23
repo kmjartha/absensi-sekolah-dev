@@ -36,7 +36,14 @@
         </div>
       </div>
 
-      <div class="cam-meta">
+      <?php if ($shift): ?>
+        <div class="meta-row mt-3">
+          <span class="lbl">Shift:</span>
+          <span class="val"><?= e($shift['nama']) ?> (<?= e(substr($shift['jam_masuk'],0,5)) ?>–<?= e(substr($shift['jam_keluar'],0,5)) ?>, toleransi <?= (int)$shift['toleransi_menit'] ?>′)</span>
+        </div>
+      <?php endif; ?>
+
+      <div class="cam-meta" style="display:none">
         <div class="meta-row">
           <span class="lbl">Lokasi:</span>
           <span class="val" id="metaLoc">—</span>
@@ -96,12 +103,14 @@
   <script>
     window.SIABSEN = window.SIABSEN || {};
     window.SIABSEN.absensi = {
-      submitUrl  : <?= json_encode(url('/absensi/submit')) ?>,
-      modelsUrl  : <?= json_encode(asset('models')) ?>,
-      storedDesc : <?= $me['face_descriptor'] ? $me['face_descriptor'] : 'null' ?>,
-      threshold  : <?= (float)$face_thresh ?>,
-      hasFace    : <?= $has_face ? 'true':'false' ?>,
-      csrf       : <?= json_encode(csrf_token()) ?>
+      submitUrl     : <?= json_encode(url('/absensi/submit')) ?>,
+      modelsUrl     : <?= json_encode(asset('models')) ?>,
+      storedDesc    : <?= $me['face_descriptor'] ? $me['face_descriptor'] : 'null' ?>,
+      threshold     : <?= (float)$face_thresh ?>,
+      hasFace       : <?= $has_face ? 'true':'false' ?>,
+      csrf          : <?= json_encode(csrf_token()) ?>,
+      shiftStart    : <?= $shift ? json_encode($shift['jam_masuk']) : 'null' ?>,
+      shiftTolerance: <?= $shift ? (int)$shift['toleransi_menit'] : 0 ?>
     };
   </script>
   <script src="<?= asset('vendor/face-api/face-api.min.js') ?>"></script>
