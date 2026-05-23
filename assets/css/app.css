@@ -5,11 +5,11 @@
 
 :root {
   /* Primary brand — modern emerald */
-  --primary:        #10b981;
-  --primary-glow:   #34d399;
-  --primary-dark:   #047857;
-  --primary-soft:   #ecfdf5;
-  --primary-fg:     #ffffff;
+  --primary:        hsl(214, 89%, 52%);
+  --primary-glow:   #a5c4ff;
+  --primary-dark:   #2851A3;
+  --primary-soft:   #d8e6ff;
+  --primary-fg:     #ECF3FF;
 
   /* Surface */
   --bg:             #f6f7f9;
@@ -31,9 +31,9 @@
   --info:           #0ea5e9;
 
   /* Effects */
-  --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --gradient-soft:    linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-  --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  --gradient-primary: linear-gradient(135deg, #1877F2 0%, #1877F2 100%);
+  --gradient-soft:    linear-gradient(135deg, #AAC9FF 0%, #AAC9FF 100%);
+  --gradient-success: linear-gradient(135deg, #1877F2 0%, #1877F2 100%);
 
   --radius-sm:  8px;
   --radius:     12px;
