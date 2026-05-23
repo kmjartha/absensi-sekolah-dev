@@ -675,7 +675,7 @@ table.dataTable thead th { font-weight:600; font-size:.78rem; text-transform:upp
 .hud-pill.bad { background: rgba(239,68,68,.92); }
 .hud-pill.wait{ background: rgba(245,158,11,.92); }
 
-.cam-meta { padding: 14px 4px 4px; font-size:.85rem; display: none !important; }
+.cam-meta { padding: 14px 4px 4px; font-size:.85rem; }
 .cam-meta .meta-row {
   display:flex; justify-content:space-between; gap:10px;
   padding:.45rem 0;
@@ -685,7 +685,7 @@ table.dataTable thead th { font-weight:600; font-size:.78rem; text-transform:upp
 .cam-meta .lbl { color: var(--text-muted); }
 .cam-meta .val { font-weight:600; color: var(--text); text-align:right; }
 
-#hudGps { display: none !important; }
+#metaLoc, #metaDist, #metaFace { display: none !important; }
 
 .btn-absen {
   width:100%; margin-top:14px;

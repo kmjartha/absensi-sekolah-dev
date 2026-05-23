@@ -37,18 +37,6 @@
       </div>
 
       <div class="cam-meta">
-        <div class="meta-row">
-          <span class="lbl">Lokasi:</span>
-          <span class="val" id="metaLoc">—</span>
-        </div>
-        <div class="meta-row">
-          <span class="lbl">Jarak ke kantor:</span>
-          <span class="val" id="metaDist">—</span>
-        </div>
-        <div class="meta-row">
-          <span class="lbl">Skor wajah:</span>
-          <span class="val" id="metaFace">—</span>
-        </div>
         <?php if ($shift): ?>
           <div class="meta-row">
             <span class="lbl">Shift:</span>
