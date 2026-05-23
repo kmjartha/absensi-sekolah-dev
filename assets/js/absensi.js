@@ -169,14 +169,18 @@
 
     const foto = captureBase64();
     const now = new Date();
+    const currentDate = now.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric' });
     const currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    let lateMinutes = 0;
     const isLate = type === 'masuk' && cfg.shiftStart && typeof cfg.shiftTolerance === 'number'
       ? (() => {
           const parts = String(cfg.shiftStart).split(':').map(Number);
           if (parts.length < 2 || parts.some(Number.isNaN)) return false;
           const shiftDate = new Date();
           shiftDate.setHours(parts[0], parts[1] + cfg.shiftTolerance, 0, 0);
-          return now.getTime() > shiftDate.getTime();
+          const diffMs = now.getTime() - shiftDate.getTime();
+          lateMinutes = diffMs > 0 ? Math.ceil(diffMs / 60000) : 0;
+          return diffMs > 0;
         })()
       : false;
 
@@ -187,15 +191,16 @@
         icon: 'warning',
         html: `
           <div style="text-align:left; margin-bottom:1rem;">
-            <strong>Waktu datang:</strong> ${currentTime}<br>
+            <strong>Tanggal:</strong> ${currentDate}<br>
+            <strong>Waktu absen masuk:</strong> ${currentTime}<br>
             <strong>Shift mulai:</strong> ${cfg.shiftStart || '—'}<br>
-            <strong>Toleransi:</strong> ${cfg.shiftTolerance} menit
+            <strong>Menit keterlambatan:</strong> ${lateMinutes} menit
           </div>
           <img src="${foto}" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-bottom:1rem;" alt="Foto terlambat" />
           <textarea id="swalLateReason" class="swal2-textarea" placeholder="Jelaskan alasan keterlambatan Anda..."></textarea>
         `,
         showCancelButton: true,
-        confirmButtonText: 'Simpan Kehadiran',
+        confirmButtonText: 'Simpan Absen',
         cancelButtonText: 'Batal',
         focusConfirm: false,
         preConfirm: () => {
