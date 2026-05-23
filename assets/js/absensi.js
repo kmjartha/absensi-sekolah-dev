@@ -190,7 +190,7 @@
         title: 'Terjadi keterlambatan',
         icon: 'warning',
         width: 'min(720px, calc(100vw - 32px))',
-        padding: '1.25rem',
+        padding: '1rem',
         html: `
           <div class="swal2-absen-grid">
             <div class="swal2-absen-card">
@@ -212,13 +212,12 @@
         confirmButtonText: 'Simpan Absen',
         cancelButtonText: 'Batal',
         focusConfirm: false,
-        showCloseButton: true,
-        closeButtonHtml: '<i class="bi bi-x-lg"></i>',
+        showCloseButton: false,
         customClass: {
           popup: 'swal2-absen-full',
           confirmButton: 'swal2-absen-confirm',
           cancelButton: 'swal2-absen-cancel',
-          closeButton: 'swal2-absen-close-btn'
+          container: 'swal2-absen-container'
         },
         buttonsStyling: false,
         preConfirm: () => {

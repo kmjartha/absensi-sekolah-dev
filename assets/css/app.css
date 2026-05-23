@@ -284,27 +284,36 @@ h3 { font-size: 1.1rem; }
   width: min(720px, calc(100vw - 32px)) !important;
   border-radius: var(--radius-xl) !important;
 }
+.swal2-absen-full .swal2-icon {
+  width: 3rem !important;
+  height: 3rem !important;
+}
+.swal2-absen-full .swal2-icon svg {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
 .swal2-absen-grid {
   display: grid;
-  gap: 1rem;
+  gap: .75rem;
   text-align: left;
 }
 .swal2-absen-card {
   background: var(--surface);
   border: 1px solid rgba(15,23,42,.08);
   border-radius: var(--radius-lg);
-  padding: 1rem 1.05rem;
+  padding: .85rem .95rem;
   box-shadow: var(--shadow-sm);
 }
 .swal2-absen-card-title {
   font-weight: 700;
   color: var(--text);
-  margin-bottom: .7rem;
+  margin-bottom: .5rem;
+  font-size: .95rem;
 }
 .swal2-absen-meta {
   display: grid;
-  gap: .65rem;
-  font-size: .95rem;
+  gap: .45rem;
+  font-size: .9rem;
   color: var(--text);
 }
 .swal2-absen-meta span {
@@ -314,6 +323,7 @@ h3 { font-size: 1.1rem; }
   border-radius: calc(var(--radius-lg) + 2px);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
+  max-height: 180px;
 }
 .swal2-absen-img img {
   width: 100%;
@@ -322,22 +332,28 @@ h3 { font-size: 1.1rem; }
 }
 .swal2-absen-textarea {
   width: 100%;
-  min-height: 150px;
+  min-height: 80px;
+  max-height: 100px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(15,23,42,.12);
-  padding: 1rem;
-  font-size: .95rem;
+  padding: .8rem;
+  font-size: .9rem;
   resize: none;
   background: var(--surface);
   color: var(--text);
   box-shadow: inset 0 1px 2px rgba(15,23,42,.06);
 }
+.swal2-absen-container .swal2-actions {
+  gap: .75rem !important;
+  margin-top: .75rem !important;
+}
 .swal2-absen-confirm,
 .swal2-absen-cancel {
   width: 100% !important;
-  border-radius: 14px !important;
-  padding: .85rem 1rem !important;
+  border-radius: 12px !important;
+  padding: .75rem 1rem !important;
   font-weight: 700 !important;
+  font-size: .95rem !important;
 }
 .swal2-absen-confirm {
   background: var(--primary) !important;
@@ -348,19 +364,6 @@ h3 { font-size: 1.1rem; }
   background: #fff !important;
   color: var(--text) !important;
   border: 1px solid rgba(15,23,42,.12) !important;
-}
-.swal2-absen-close-btn {
-  position: absolute !important;
-  top: 1rem !important;
-  right: 1rem !important;
-  width: 36px !important;
-  height: 36px !important;
-  padding: 0 !important;
-  border-radius: 50% !important;
-  border: none !important;
-  background: rgba(15,23,42,.06) !important;
-  color: var(--text-muted) !important;
-  box-shadow: none !important;
 }
 
 /* ============================================ Tables */
