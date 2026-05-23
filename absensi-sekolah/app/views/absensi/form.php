@@ -85,7 +85,7 @@
     window.SIABSEN = window.SIABSEN || {};
     window.SIABSEN.absensi = {
       submitUrl     : <?= json_encode(url('/absensi/submit')) ?>,
-      modelsUrl     : <?= json_encode(asset('models')) ?>,
+      modelsUrl     : <?= json_encode(rtrim(asset('models'), '/').'/') ?>,
       storedDesc    : <?= $me['face_descriptor'] ? $me['face_descriptor'] : 'null' ?>,
       threshold     : <?= (float)$face_thresh ?>,
       hasFace       : <?= $has_face ? 'true':'false' ?>,
