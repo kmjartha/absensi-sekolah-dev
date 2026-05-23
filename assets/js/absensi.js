@@ -187,22 +187,35 @@
     let reason = null;
     if (isLate) {
       const result = await Swal.fire({
-        title: 'Anda terlambat datang',
+        title: 'Terjadi keterlambatan',
         icon: 'warning',
         html: `
-          <div style="text-align:left; margin-bottom:1rem;">
-            <strong>Tanggal:</strong> ${currentDate}<br>
-            <strong>Waktu absen masuk:</strong> ${currentTime}<br>
-            <strong>Shift mulai:</strong> ${cfg.shiftStart || '—'}<br>
-            <strong>Menit keterlambatan:</strong> ${lateMinutes} menit
+          <div style="display:grid;gap:.75rem;text-align:left;">
+            <div style="padding:.9rem 1rem;border:1px solid rgba(0,0,0,.08);border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.05);">
+              <div style="font-size:.95rem;color:#333;font-weight:600;margin-bottom:.5rem">Rincian absensi</div>
+              <div style="display:grid;gap:.5rem;font-size:.9rem;color:#444;">
+                <div><span style="color:#6b7280">Tanggal:</span> ${currentDate}</div>
+                <div><span style="color:#6b7280">Waktu absen masuk:</span> ${currentTime}</div>
+                <div><span style="color:#6b7280">Shift mulai:</span> ${cfg.shiftStart || '—'}</div>
+                <div><span style="color:#6b7280">Menit keterlambatan:</span> <strong>${lateMinutes} menit</strong></div>
+              </div>
+            </div>
+            <div style="border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.1);">
+              <img src="${foto}" style="width:100%;height:auto;display:block;object-fit:cover;" alt="Foto terlambat" />
+            </div>
+            <textarea id="swalLateReason" class="swal2-textarea" placeholder="Jelaskan alasan keterlambatan Anda..." style="min-height:140px;border-radius:14px;border:1px solid rgba(0,0,0,.14);padding:1rem;font-size:.95rem;resize:none;"></textarea>
           </div>
-          <img src="${foto}" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-bottom:1rem;" alt="Foto terlambat" />
-          <textarea id="swalLateReason" class="swal2-textarea" placeholder="Jelaskan alasan keterlambatan Anda..."></textarea>
         `,
         showCancelButton: true,
         confirmButtonText: 'Simpan Absen',
         cancelButtonText: 'Batal',
         focusConfirm: false,
+        customClass: {
+          popup: 'swal2-border-radius',
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary'
+        },
+        buttonsStyling: false,
         preConfirm: () => {
           const val = document.getElementById('swalLateReason')?.value.trim();
           if (!val) {
