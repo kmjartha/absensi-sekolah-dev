@@ -166,19 +166,66 @@
 
   btn.addEventListener('click', async () => {
     if (btn.disabled) return;
+
+    const foto = captureBase64();
+    const now = new Date();
+    const currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    const isLate = type === 'masuk' && cfg.shiftStart && typeof cfg.shiftTolerance === 'number'
+      ? (() => {
+          const parts = String(cfg.shiftStart).split(':').map(Number);
+          if (parts.length < 2 || parts.some(Number.isNaN)) return false;
+          const shiftDate = new Date();
+          shiftDate.setHours(parts[0], parts[1] + cfg.shiftTolerance, 0, 0);
+          return now.getTime() > shiftDate.getTime();
+        })()
+      : false;
+
+    let reason = null;
+    if (isLate) {
+      const result = await Swal.fire({
+        title: 'Anda terlambat datang',
+        icon: 'warning',
+        html: `
+          <div style="text-align:left; margin-bottom:1rem;">
+            <strong>Waktu datang:</strong> ${currentTime}<br>
+            <strong>Shift mulai:</strong> ${cfg.shiftStart || '—'}<br>
+            <strong>Toleransi:</strong> ${cfg.shiftTolerance} menit
+          </div>
+          <img src="${foto}" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-bottom:1rem;" alt="Foto terlambat" />
+          <textarea id="swalLateReason" class="swal2-textarea" placeholder="Jelaskan alasan keterlambatan Anda..."></textarea>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Simpan Kehadiran',
+        cancelButtonText: 'Batal',
+        focusConfirm: false,
+        preConfirm: () => {
+          const val = document.getElementById('swalLateReason')?.value.trim();
+          if (!val) {
+            Swal.showValidationMessage('Alasan terlambat harus diisi.');
+          }
+          return val;
+        }
+      });
+      if (!result.isConfirmed || !result.value) {
+        return;
+      }
+      reason = result.value;
+    }
+
     btn.disabled = true;
     const oldHtml = btn.innerHTML;
     btn.innerHTML = '<i class="bi bi-hourglass-split"></i> <span>Mengirim…</span>';
 
-    const foto = captureBase64();
+    const fotoData = foto;
     const fd = new FormData();
     fd.append('_csrf', cfg.csrf);
     fd.append('type', type);
-    fd.append('foto', foto);
+    fd.append('foto', fotoData);
     fd.append('lat', gps.lat);
     fd.append('lng', gps.lng);
     if (lastDistance !== null) fd.append('face_distance', lastDistance);
     if (lastDescriptor)        fd.append('descriptor', JSON.stringify(lastDescriptor));
+    if (reason)                 fd.append('keterangan', reason);
 
     try {
       const res = await fetch(cfg.submitUrl, {

@@ -241,14 +241,25 @@ class KaryawanController extends Controller
 
     private function saveProfilePhoto(string $field): ?string
     {
-        if (empty($_FILES[$field]['tmp_name']) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+        if (empty($_FILES[$field]) || !is_uploaded_file($_FILES[$field]['tmp_name'])) {
             return null;
         }
-        $cfg = \App\Core\App::$config['upload'];
-        if ($_FILES[$field]['size'] > $cfg['profile_max']) {
+
+        $error = $_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE;
+        if ($error !== UPLOAD_ERR_OK) {
+            if (in_array($error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+                $this->flash('error', 'Foto melebihi 2 MB.');
+            }
+            return null;
+        }
+
+        $cfg = \App\Core\App::$config['upload'] ?? [];
+        $max = isset($cfg['profile_max']) ? (int)$cfg['profile_max'] : 2 * 1024 * 1024;
+        if (empty($_FILES[$field]['size']) || $_FILES[$field]['size'] > $max) {
             $this->flash('error', 'Foto melebihi 2 MB.');
             return null;
         }
+
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime  = $finfo->file($_FILES[$field]['tmp_name']);
         $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
@@ -256,9 +267,13 @@ class KaryawanController extends Controller
             $this->flash('error', 'Format foto harus JPG/PNG/WEBP.');
             return null;
         }
+
         $name = 'p_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $allowed[$mime];
         $dest = PUBLIC_PATH . '/uploads/profile/' . $name;
-        if (!move_uploaded_file($_FILES[$field]['tmp_name'], $dest)) return null;
+        if (!move_uploaded_file($_FILES[$field]['tmp_name'], $dest)) {
+            $this->flash('error', 'Gagal menyimpan foto.');
+            return null;
+        }
         return $name;
     }
 

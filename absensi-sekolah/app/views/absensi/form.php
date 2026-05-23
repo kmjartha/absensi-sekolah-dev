@@ -96,12 +96,14 @@
   <script>
     window.SIABSEN = window.SIABSEN || {};
     window.SIABSEN.absensi = {
-      submitUrl  : <?= json_encode(url('/absensi/submit')) ?>,
-      modelsUrl  : <?= json_encode(asset('models')) ?>,
-      storedDesc : <?= $me['face_descriptor'] ? $me['face_descriptor'] : 'null' ?>,
-      threshold  : <?= (float)$face_thresh ?>,
-      hasFace    : <?= $has_face ? 'true':'false' ?>,
-      csrf       : <?= json_encode(csrf_token()) ?>
+      submitUrl     : <?= json_encode(url('/absensi/submit')) ?>,
+      modelsUrl     : <?= json_encode(asset('models')) ?>,
+      storedDesc    : <?= $me['face_descriptor'] ? $me['face_descriptor'] : 'null' ?>,
+      threshold     : <?= (float)$face_thresh ?>,
+      hasFace       : <?= $has_face ? 'true':'false' ?>,
+      csrf          : <?= json_encode(csrf_token()) ?>,
+      shiftStart    : <?= $shift ? json_encode($shift['jam_masuk']) : 'null' ?>,
+      shiftTolerance: <?= $shift ? (int)$shift['toleransi_menit'] : 0 ?>
     };
   </script>
   <script src="<?= asset('vendor/face-api/face-api.min.js') ?>"></script>
