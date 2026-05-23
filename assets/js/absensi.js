@@ -189,31 +189,36 @@
       const result = await Swal.fire({
         title: 'Terjadi keterlambatan',
         icon: 'warning',
+        width: 'min(720px, calc(100vw - 32px))',
+        padding: '1.25rem',
         html: `
-          <div style="display:grid;gap:.75rem;text-align:left;">
-            <div style="padding:.9rem 1rem;border:1px solid rgba(0,0,0,.08);border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.05);">
-              <div style="font-size:.95rem;color:#333;font-weight:600;margin-bottom:.5rem">Rincian absensi</div>
-              <div style="display:grid;gap:.5rem;font-size:.9rem;color:#444;">
-                <div><span style="color:#6b7280">Tanggal:</span> ${currentDate}</div>
-                <div><span style="color:#6b7280">Waktu absen masuk:</span> ${currentTime}</div>
-                <div><span style="color:#6b7280">Shift mulai:</span> ${cfg.shiftStart || '—'}</div>
-                <div><span style="color:#6b7280">Menit keterlambatan:</span> <strong>${lateMinutes} menit</strong></div>
+          <div class="swal2-absen-grid">
+            <div class="swal2-absen-card">
+              <div class="swal2-absen-card-title">Rincian absensi</div>
+              <div class="swal2-absen-meta">
+                <div><span>Tanggal:</span> ${currentDate}</div>
+                <div><span>Waktu absen masuk:</span> ${currentTime}</div>
+                <div><span>Shift mulai:</span> ${cfg.shiftStart || '—'}</div>
+                <div><span>Menit keterlambatan:</span> <strong>${lateMinutes} menit</strong></div>
               </div>
             </div>
-            <div style="border-radius:18px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.1);">
-              <img src="${foto}" style="width:100%;height:auto;display:block;object-fit:cover;" alt="Foto terlambat" />
+            <div class="swal2-absen-img">
+              <img src="${foto}" alt="Foto terlambat" />
             </div>
-            <textarea id="swalLateReason" class="swal2-textarea" placeholder="Jelaskan alasan keterlambatan Anda..." style="min-height:140px;border-radius:14px;border:1px solid rgba(0,0,0,.14);padding:1rem;font-size:.95rem;resize:none;"></textarea>
+            <textarea id="swalLateReason" class="swal2-absen-textarea" placeholder="Jelaskan alasan keterlambatan Anda..."></textarea>
           </div>
         `,
         showCancelButton: true,
         confirmButtonText: 'Simpan Absen',
         cancelButtonText: 'Batal',
         focusConfirm: false,
+        showCloseButton: true,
+        closeButtonHtml: '<i class="bi bi-x-lg"></i>',
         customClass: {
-          popup: 'swal2-border-radius',
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-secondary'
+          popup: 'swal2-absen-full',
+          confirmButton: 'swal2-absen-confirm',
+          cancelButton: 'swal2-absen-cancel',
+          closeButton: 'swal2-absen-close-btn'
         },
         buttonsStyling: false,
         preConfirm: () => {
@@ -222,6 +227,10 @@
             Swal.showValidationMessage('Alasan terlambat harus diisi.');
           }
           return val;
+        },
+        didOpen: () => {
+          const input = Swal.getPopup().querySelector('#swalLateReason');
+          if (input) input.focus();
         }
       });
       if (!result.isConfirmed || !result.value) {
