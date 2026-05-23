@@ -55,7 +55,7 @@ class NotificationRead extends Model
 
         // Pengumuman published
         $ann = $db->query(
-            "SELECT id, judul, isi, created_at
+            "SELECT id, judul, isi, image, created_at
              FROM announcements WHERE is_published = 1
              ORDER BY created_at DESC LIMIT 30"
         )->fetchAll();
@@ -82,9 +82,10 @@ class NotificationRead extends Model
                 'ref_id'     => (int)$a['id'],
                 'judul'      => $a['judul'],
                 'isi'        => $a['isi'],
+                'image'      => $a['image'] ?? null,
                 'icon'       => 'bi-megaphone-fill',
                 'tone'       => 'primary',
-                'url'        => null,
+                'url'        => url('/notifikasi/announcement/' . $a['id']),
                 'created_at' => $a['created_at'],
                 'is_read'    => in_array((int)$a['id'], $readAnn, true),
             ];
@@ -107,7 +108,7 @@ class NotificationRead extends Model
                 'isi'        => $isi,
                 'icon'       => $approved ? 'bi-check-circle-fill' : 'bi-x-circle-fill',
                 'tone'       => $approved ? 'success' : 'danger',
-                'url'        => url('/cuti'),
+                'url'        => url('/notifikasi/leave_status/' . $c['id']),
                 'created_at' => $c['created_at'],
                 'is_read'    => in_array((int)$c['id'], $readCuti, true),
             ];

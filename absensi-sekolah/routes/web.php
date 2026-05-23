@@ -73,7 +73,8 @@ $router->get ("/laporan/karyawan/{id}/export",  "LaporanController@karyawanExpor
 $router->get ("/laporan/export",                "LaporanController@export",         [AuthMiddleware::class]);
 
 // ========= Notifikasi (semua user) =========
-$router->get ("/notifikasi",          "NotifikasiController@index",   [AuthMiddleware::class]);
-$router->post("/notifikasi/read-all", "NotifikasiController@readAll", [AuthMiddleware::class, CsrfMiddleware::class]);
-$router->post("/notifikasi/read",     "NotifikasiController@read",    [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->get ("/notifikasi",                     "NotifikasiController@index",   [AuthMiddleware::class]);
+$router->get ("/notifikasi/{type}/{id}",        "NotifikasiController@show",    [AuthMiddleware::class]);
+$router->post("/notifikasi/read-all",            "NotifikasiController@readAll", [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post("/notifikasi/read",                "NotifikasiController@read",    [AuthMiddleware::class, CsrfMiddleware::class]);
 

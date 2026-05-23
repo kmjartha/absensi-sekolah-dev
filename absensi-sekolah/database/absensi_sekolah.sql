@@ -166,6 +166,7 @@ CREATE TABLE `announcements` (
   `id`            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `judul`         VARCHAR(180) NOT NULL,
   `isi`           TEXT NOT NULL,
+  `image`         VARCHAR(255) NULL,
   `is_published`  TINYINT(1) NOT NULL DEFAULT 1,
   `created_by`    INT UNSIGNED NULL,
   `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
