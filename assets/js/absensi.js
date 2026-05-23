@@ -189,8 +189,8 @@
       const result = await Swal.fire({
         title: 'Terjadi keterlambatan',
         icon: 'warning',
-        width: 'min(720px, calc(100vw - 32px))',
-        padding: '1rem',
+        width: 'min(600px, calc(100vw - 24px))',
+        padding: '1.2rem 1.3rem',
         html: `
           <div class="swal2-absen-grid">
             <div class="swal2-absen-card">
@@ -215,9 +215,9 @@
         showCloseButton: false,
         customClass: {
           popup: 'swal2-absen-full',
+          actions: 'swal2-absen-actions',
           confirmButton: 'swal2-absen-confirm',
-          cancelButton: 'swal2-absen-cancel',
-          container: 'swal2-absen-container'
+          cancelButton: 'swal2-absen-cancel'
         },
         buttonsStyling: false,
         preConfirm: () => {
