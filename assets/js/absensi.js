@@ -94,8 +94,7 @@
       await faceapi.nets.faceRecognitionNet.loadFromUri(cfg.modelsUrl);
       modelsReady = true;
     } catch (e) {
-      console.error('Face model load error:', e);
-      setHud(hudFace, false, '<i class="bi bi-x-circle"></i> Gagal memuat model wajah');
+      setHud(hudFace, false, '<i class="bi bi-x-circle"></i> Gagal memuat model');
       throw e;
     }
   }

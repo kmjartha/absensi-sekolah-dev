@@ -36,7 +36,26 @@
         </div>
       </div>
 
-      <div class="cam-meta">
+      <?php if ($shift): ?>
+        <div class="meta-row mt-3">
+          <span class="lbl">Shift:</span>
+          <span class="val"><?= e($shift['nama']) ?> (<?= e(substr($shift['jam_masuk'],0,5)) ?>–<?= e(substr($shift['jam_keluar'],0,5)) ?>, toleransi <?= (int)$shift['toleransi_menit'] ?>′)</span>
+        </div>
+      <?php endif; ?>
+
+      <div class="cam-meta" style="display:none">
+        <div class="meta-row">
+          <span class="lbl">Lokasi:</span>
+          <span class="val" id="metaLoc">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="lbl">Jarak ke kantor:</span>
+          <span class="val" id="metaDist">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="lbl">Skor wajah:</span>
+          <span class="val" id="metaFace">—</span>
+        </div>
         <?php if ($shift): ?>
           <div class="meta-row">
             <span class="lbl">Shift:</span>
@@ -85,7 +104,7 @@
     window.SIABSEN = window.SIABSEN || {};
     window.SIABSEN.absensi = {
       submitUrl     : <?= json_encode(url('/absensi/submit')) ?>,
-      modelsUrl     : <?= json_encode(rtrim(asset('models'), '/').'/') ?>,
+      modelsUrl     : <?= json_encode(asset('models')) ?>,
       storedDesc    : <?= $me['face_descriptor'] ? $me['face_descriptor'] : 'null' ?>,
       threshold     : <?= (float)$face_thresh ?>,
       hasFace       : <?= $has_face ? 'true':'false' ?>,

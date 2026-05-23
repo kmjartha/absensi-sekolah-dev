@@ -685,8 +685,6 @@ table.dataTable thead th { font-weight:600; font-size:.78rem; text-transform:upp
 .cam-meta .lbl { color: var(--text-muted); }
 .cam-meta .val { font-weight:600; color: var(--text); text-align:right; }
 
-#metaLoc, #metaDist, #metaFace { display: none !important; }
-
 .btn-absen {
   width:100%; margin-top:14px;
   background: var(--gradient-primary);
