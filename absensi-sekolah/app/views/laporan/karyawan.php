@@ -1,12 +1,9 @@
 <?php $bulan = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; ?>
 <div class="page-head d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
   <div>
-    <h2 class="mb-1">Laporan per Karyawan</h2>
+    <h2 class="mb-1">Laporan Karyawan</h2>
     <div class="text-muted-soft">Periode <?= e($bulan[$month]) ?> <?= (int)$year ?> · <?= count($rows) ?> karyawan</div>
   </div>
-  <a href="<?= url('/laporan/general') ?>" class="btn btn-outline-primary btn-sm">
-    <i class="bi bi-grid-3x3-gap"></i> Lihat Rekap General
-  </a>
 </div>
 
 <form method="get" class="card-soft p-3 mb-3 d-flex flex-wrap gap-2 align-items-end">
@@ -40,6 +37,9 @@
     <input type="text" name="q" value="<?= e($q) ?>" class="form-control form-control-sm" placeholder="Cari…">
   </div>
   <button class="btn btn-primary btn-sm">Tampilkan</button>
+  <a href="<?= url('/laporan/export') ?>?month=<?= $month ?>&year=<?= $year ?><?= $q !== '' ? '&q='.urlencode($q) : '' ?><?= $role !== '' ? '&role='.urlencode($role) : '' ?>" class="btn btn-success btn-sm">
+    <i class="bi bi-file-earmark-excel-fill"></i> Excel
+  </a>
 </form>
 
 <div class="card-soft p-0" style="overflow-x:auto">

@@ -70,15 +70,17 @@
           } catch (\Throwable $e) {}
         ?>
       </a>
+      <?php if (has_role('HRD')): ?>
+        <a href="<?= url('/laporan/harian') ?>" class="<?= is_active('/laporan/harian') ?>">
+          <i class="bi bi-calendar-day-fill"></i> Laporan Harian
+        </a>
+      <?php endif; ?>
     <?php endif; ?>
 
     <?php if (in_array($role, ['HRD','Kepsek'], true)): ?>
       <?php $__uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH); ?>
-      <a href="<?= url('/laporan/general') ?>" class="<?= ($__uri==='/laporan' || str_starts_with($__uri, '/laporan/general')) ? 'active' : '' ?>">
-        <i class="bi bi-bar-chart-fill"></i> Laporan Rekap
-      </a>
       <a href="<?= url('/laporan/karyawan') ?>" class="<?= is_active('/laporan/karyawan') ?>">
-        <i class="bi bi-person-lines-fill"></i> Laporan per Karyawan
+        <i class="bi bi-person-lines-fill"></i> Laporan Karyawan
       </a>
     <?php endif; ?>
   </nav>

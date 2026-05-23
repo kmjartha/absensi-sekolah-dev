@@ -32,16 +32,37 @@ class Attendance extends Model
 
     public function history(int $userId, int $month, int $year): array
     {
-        $stmt = $this->db()->prepare(
-            "SELECT a.*, s.nama AS shift_nama
-             FROM attendances a
-             LEFT JOIN shifts s ON s.id = a.shift_id
-             WHERE a.user_id = ? AND MONTH(a.tanggal) = ? AND YEAR(a.tanggal) = ?
-             ORDER BY a.tanggal DESC"
-        );
-        $stmt->execute([$userId, $month, $year]);
-        return $stmt->fetchAll();
+                $stmt = $this->db()->prepare(
+                        "SELECT a.*, s.nama AS shift_nama, s.jam_masuk AS shift_jam_masuk, s.toleransi_menit,
+                                        IF(a.jam_masuk IS NULL, NULL,
+                                            GREATEST(0, TIMESTAMPDIFF(MINUTE, CONCAT(a.tanggal, ' ', s.jam_masuk), a.jam_masuk) - s.toleransi_menit)
+                                        ) AS terlambat_menit
+                         FROM attendances a
+                         LEFT JOIN shifts s ON s.id = a.shift_id
+                         WHERE a.user_id = ? AND MONTH(a.tanggal) = ? AND YEAR(a.tanggal) = ?
+                         ORDER BY a.tanggal DESC"
+                );
+                $stmt->execute([$userId, $month, $year]);
+                return $stmt->fetchAll();
     }
+
+        /** Daily report for HRD view — include computed minutes late */
+        public function dailyReport(string $date): array
+        {
+                $stmt = $this->db()->prepare(
+                        "SELECT a.*, u.niy, u.nama, s.nama AS shift_nama, s.jam_masuk AS shift_jam_masuk, s.toleransi_menit,
+                                        IF(a.jam_masuk IS NULL, NULL,
+                                            GREATEST(0, TIMESTAMPDIFF(MINUTE, CONCAT(a.tanggal, ' ', s.jam_masuk), a.jam_masuk) - s.toleransi_menit)
+                                        ) AS terlambat_menit
+                         FROM attendances a
+                         JOIN users u ON u.id = a.user_id
+                         LEFT JOIN shifts s ON s.id = a.shift_id
+                         WHERE a.tanggal = ?
+                         ORDER BY u.nama ASC"
+                );
+                $stmt->execute([$date]);
+                return $stmt->fetchAll();
+        }
 
     public function summaryMonth(int $userId, int $month, int $year): array
     {
