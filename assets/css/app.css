@@ -846,7 +846,7 @@ table.dataTable thead th { font-weight:600; font-size:.78rem; text-transform:upp
   width: 100px;
   max-width: 100px;
   min-width: 72px;
-  height: 30px;
+  height: 50px;
   border-radius: 12px;
   overflow: hidden;
   background: var(--surface-2);
