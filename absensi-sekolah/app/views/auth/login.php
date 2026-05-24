@@ -4,7 +4,7 @@
       <div class="logo">SA</div>
       <div>
         <div class="name">SiAbsen</div>
-        <div class="tag">Sistem Absensi Sekolah</div>
+        <div class="tag">Sistem Absensi BiMa School</div>
       </div>
     </div>
 
