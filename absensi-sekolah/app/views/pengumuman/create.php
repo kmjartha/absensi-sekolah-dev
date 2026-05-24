@@ -3,7 +3,7 @@
   <h2 class="mb-0">Tambah Pengumuman</h2>
 </div>
 
-<form method="post" action="<?= url('/pengumuman/create') ?>" class="card-soft">
+<form method="post" action="<?= url('/pengumuman/create') ?>" enctype="multipart/form-data" class="card-soft">
   <?= csrf_field() ?>
   <div class="mb-3">
     <label class="form-label">Judul</label>
@@ -12,6 +12,11 @@
   <div class="mb-3">
     <label class="form-label">Isi Pengumuman</label>
     <textarea name="isi" class="form-control" rows="8" required><?= e(old('isi')) ?></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Gambar (opsional)</label>
+    <input type="file" name="image" accept="image/jpeg,image/png,image/webp" class="form-control">
+    <div class="form-text">Unggah gambar untuk membuat notifikasi dan halaman detail lebih menarik.</div>
   </div>
   <div class="mb-3 form-check form-switch">
     <input type="checkbox" name="is_published" id="pub" class="form-check-input" checked>

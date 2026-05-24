@@ -42,6 +42,11 @@
           <div class="msg"><?= e(mb_strimwidth($n['isi'], 0, 160, '…')) ?></div>
           <div class="meta"><?= e(format_date_id($n['created_at'], true)) ?></div>
         </div>
+        <?php if (!empty($n['image'])): ?>
+          <div class="thumb">
+            <img src="<?= upload_url('announcements/' . $n['image']) ?>" alt="Preview notifikasi" loading="lazy">
+          </div>
+        <?php endif; ?>
       </a>
     <?php endforeach; ?>
   </div>

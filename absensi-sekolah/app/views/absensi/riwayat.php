@@ -84,15 +84,6 @@ $bulan = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
           <?php if (!empty($r['keterangan'])): ?>
             <div class="text-muted-soft mt-1" style="font-size:.78rem"><i class="bi bi-chat-left-text"></i> <?= e($r['keterangan']) ?></div>
           <?php endif; ?>
-          <?php if ($r['lat_masuk']!==null && $r['lng_masuk']!==null): ?>
-            <a class="d-block mt-1" target="_blank" rel="noopener"
-               href="https://www.google.com/maps?q=<?= urlencode($r['lat_masuk'].','.$r['lng_masuk']) ?>">
-              <i class="bi bi-geo-alt"></i> Lihat lokasi
-            </a>
-          <?php endif; ?>
-          <?php if ($r['face_match_masuk']!==null): ?>
-            <div class="text-muted-soft mt-1" style="font-size:.72rem">Wajah: <?= number_format((float)$r['face_match_masuk'],1) ?>%</div>
-          <?php endif; ?>
         </div>
       </div>
     <?php endforeach; ?>
