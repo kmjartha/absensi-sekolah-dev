@@ -6,8 +6,9 @@ $date = $date ?? date('Y-m-d');
     <h2 class="mb-1">Laporan Harian</h2>
     <div class="text-muted-soft">Tanggal: <?= e($date) ?></div>
   </div>
-  <form method="get" class="d-flex gap-2">
+  <form method="get" class="d-flex gap-2 flex-wrap">
     <input type="date" name="date" class="form-control form-control-sm" value="<?= e($date) ?>">
+    <input type="text" name="q" class="form-control form-control-sm" placeholder="Cari nama atau NIY..." value="<?= e($q ?? '') ?>">
     <button class="btn btn-primary btn-sm">Tampilkan</button>
   </form>
 </div>
@@ -16,15 +17,17 @@ $date = $date ?? date('Y-m-d');
   <table class="table table-hover align-middle mb-0">
     <thead style="background:var(--surface-2)">
       <tr>
+        <th>#</th>
         <th>NIY</th><th>Nama</th><th>Tanggal</th><th>Masuk</th><th>Menit Telat</th><th>Pulang</th><th class="text-center">Status</th><th class="text-end">Match</th>
       </tr>
     </thead>
     <tbody>
       <?php if (!$rows): ?>
-        <tr><td colspan="8" class="text-center text-muted-soft py-4">Tidak ada absensi pada tanggal ini.</td></tr>
+        <tr><td colspan="9" class="text-center text-muted-soft py-4">Tidak ada absensi pada tanggal ini.</td></tr>
       <?php endif; ?>
-      <?php foreach ($rows as $r): ?>
+      <?php foreach ($rows as $i => $r): ?>
         <tr>
+          <td class="text-muted-soft text-center"><?= $i + 1 ?></td>
           <td class="text-muted-soft"><?= e($r['niy']) ?></td>
           <td class="fw-semibold"><?= e($r['nama']) ?></td>
           <td><?= e($r['tanggal']) ?></td>

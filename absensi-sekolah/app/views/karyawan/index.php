@@ -4,13 +4,19 @@
     <h2 class="mb-0">Master Karyawan</h2>
     <small class="text-muted-soft">Kelola data semua karyawan sekolah, termasuk foto wajah untuk facial recognition.</small>
   </div>
-  <?php if (!has_role('Supervisor')): ?>
-    <a href="<?= url('/karyawan/create') ?>" class="btn btn-primary">
-      <i class="bi bi-plus-lg"></i> Tambah Karyawan
-    </a>
-  <?php else: ?>
-    <div class="text-muted-soft">Supervisor hanya dapat melihat daftar dan detail karyawan.</div>
-  <?php endif; ?>
+  <div class="d-flex gap-2 align-items-center flex-wrap">
+    <form method="get" class="d-flex gap-2" style="flex: 1; min-width: 250px;">
+      <input type="text" name="q" class="form-control form-control-sm" placeholder="Cari nama atau NIY..." value="<?= e($q ?? '') ?>">
+      <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-search"></i></button>
+    </form>
+    <?php if (!has_role('Supervisor')): ?>
+      <a href="<?= url('/karyawan/create') ?>" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Tambah Karyawan
+      </a>
+    <?php else: ?>
+      <div class="text-muted-soft">Supervisor hanya dapat melihat daftar dan detail karyawan.</div>
+    <?php endif; ?>
+  </div>
 </div>
 
 <div class="card-soft p-0">
