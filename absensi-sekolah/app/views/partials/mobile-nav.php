@@ -32,7 +32,7 @@
     <i class="bi bi-calendar-event"></i><span>Cuti</span>
   </a>
   <a href="<?= url('/notifikasi') ?>" class="<?= is_active('/notifikasi') ?> nav-with-dot">
-    <i class="bi bi-bell-fill"></i><span>Notifs</span>
+    <i class="bi bi-bell-fill"></i><span>Notif</span>
     <?php if ($unreadNav > 0): ?><span class="dot-badge"><?= $unreadNav > 9 ? '9+' : $unreadNav ?></span><?php endif; ?>
   </a>
 </nav>
