@@ -129,13 +129,24 @@ class LaporanController extends Controller
             return $this->render('errors.403', ['title'=>'403'], 'auth');
         }
         $date = trim((string)($_GET['date'] ?? date('Y-m-d')));
+        $q = trim((string)($_GET['q'] ?? ''));
         $att = new Attendance();
         $rows = $att->dailyReport($date);
+
+        // Filter by search query
+        if ($q !== '') {
+            $needle = mb_strtolower($q);
+            $rows = array_values(array_filter($rows, fn($r) =>
+                str_contains(mb_strtolower($r['nama']), $needle) ||
+                str_contains(mb_strtolower($r['niy']), $needle)
+            ));
+        }
 
         return $this->render('laporan.harian', [
             'title' => 'Laporan Harian',
             'date'  => $date,
             'rows'  => $rows,
+            'q'     => $q,
         ]);
     }
 

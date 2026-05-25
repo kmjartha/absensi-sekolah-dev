@@ -33,9 +33,21 @@ class KaryawanController extends Controller
     {
         $this->guardView();
         $users = (new User())->allWithRole();
+        $q = trim((string)($_GET['q'] ?? ''));
+
+        // Filter by search query
+        if ($q !== '') {
+            $needle = mb_strtolower($q);
+            $users = array_values(array_filter($users, fn($u) =>
+                str_contains(mb_strtolower($u['nama']), $needle) ||
+                str_contains(mb_strtolower($u['niy']), $needle)
+            ));
+        }
+
         return $this->render('karyawan.index', [
             'title'    => 'Master Karyawan',
             'users'    => $users,
+            'q'        => $q,
         ]);
     }
 
