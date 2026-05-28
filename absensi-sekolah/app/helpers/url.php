@@ -59,6 +59,37 @@ if (!function_exists('upload_url')) {
     }
 }
 
+if (!function_exists('profile_photo_url')) {
+    function profile_photo_url(?string $path): string
+    {
+        if (!$path) return asset('images/default-avatar.png');
+
+        $rel = ltrim($path, '/');
+        if (str_starts_with($rel, 'profile/')) {
+            $rel = substr($rel, 8);
+        }
+        if (str_starts_with($rel, 'uploads/')) {
+            $rel = substr($rel, 8);
+        }
+
+        if (str_starts_with($rel, 'profile/')) {
+            $rel = substr($rel, 8);
+        }
+
+        $rootPath = UPLOADS_PATH . '/profile/' . $rel;
+        if (is_file($rootPath)) {
+            return url('uploads/profile/' . $rel);
+        }
+
+        $legacyPath = BASE_PATH . '/public/uploads/profile/' . $rel;
+        if (is_file($legacyPath)) {
+            return url('absensi-sekolah/public/uploads/profile/' . $rel);
+        }
+
+        return url('uploads/profile/' . $rel);
+    }
+}
+
 if (!function_exists('current_url')) {
     function current_url(): string
     {

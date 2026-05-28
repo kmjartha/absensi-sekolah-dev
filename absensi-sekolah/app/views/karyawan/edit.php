@@ -85,7 +85,7 @@
       <?php if (!empty($user['foto_profile'])): ?>
         <div class="mb-2">
           <small class="text-muted-soft">Foto saat ini:</small><br>
-          <img src="<?= upload_url('profile/' . $user['foto_profile']) ?>" class="img-fluid rounded mb-2" style="max-height:160px">
+          <img src="<?= profile_photo_url($user['foto_profile']) ?>" class="img-fluid rounded mb-2" style="max-height:160px" alt="Foto saat ini">
         </div>
       <?php endif; ?>
 

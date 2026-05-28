@@ -87,7 +87,13 @@
 
   <div class="sidebar-footer">
     <div class="sidebar-user">
-      <a href="<?= url('/profile') ?>" class="avatar" title="Profil Saya"><?= e(initials($u['nama'] ?? '?')) ?></a>
+      <a href="<?= url('/profile') ?>" class="avatar" title="Profil Saya">
+        <?php if (!empty($u['foto_profile'])): ?>
+          <img src="<?= profile_photo_url($u['foto_profile']) ?>" alt="Foto profil" class="avatar-img">
+        <?php else: ?>
+          <?= e(initials($u['nama'] ?? '?')) ?>
+        <?php endif; ?>
+      </a>
       <div class="info">
         <div class="nm"><?= e($u['nama'] ?? '') ?></div>
         <div class="rl"><?= e($u['role_name'] ?? '') ?> &middot; <?= e($u['niy'] ?? '') ?></div>

@@ -15,7 +15,7 @@
     <div class="row gy-4">
       <div class="col-md-4 text-center">
         <?php if (!empty($user['foto_profile'])): ?>
-          <img src="<?= upload_url('profile/' . $user['foto_profile']) ?>" class="img-fluid rounded-circle mb-3" style="max-width:180px;" alt="Foto profil">
+          <img src="<?= profile_photo_url($user['foto_profile']) ?>" class="img-fluid rounded-circle mb-3" style="max-width:180px;" alt="Foto profil">
         <?php else: ?>
           <div class="avatar avatar-xl bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center fs-1 mb-3" style="width:180px;height:180px;">
             <?= e(initials($user['nama'] ?? '?')) ?>

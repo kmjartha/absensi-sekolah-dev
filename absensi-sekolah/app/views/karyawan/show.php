@@ -7,7 +7,7 @@
   <div class="col-md-4">
     <div class="card-soft text-center">
       <?php if (!empty($user['foto_profile'])): ?>
-        <img src="<?= upload_url('profile/' . $user['foto_profile']) ?>" class="img-fluid rounded mb-3" style="max-height:240px">
+        <img src="<?= profile_photo_url($user['foto_profile']) ?>" class="img-fluid rounded mb-3" style="max-height:240px" alt="Foto karyawan">
       <?php else: ?>
         <div class="avatar-xl mx-auto mb-3"><?= e(initials($user['nama'])) ?></div>
       <?php endif; ?>

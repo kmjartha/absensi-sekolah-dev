@@ -19,7 +19,11 @@
     </div>
     <div class="mh-actions d-flex align-items-center gap-2">
       <a href="<?= url('/profile') ?>" class="avatar" title="Profil Saya">
-        <?= e(initials($u['nama'] ?? '?')) ?>
+        <?php if (!empty($u['foto_profile'])): ?>
+          <img src="<?= profile_photo_url($u['foto_profile']) ?>" alt="Foto profil" class="avatar-img">
+        <?php else: ?>
+          <?= e(initials($u['nama'] ?? '?')) ?>
+        <?php endif; ?>
       </a>
     </div>
   </div>

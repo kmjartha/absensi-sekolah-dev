@@ -41,7 +41,7 @@
           <td><?= $i + 1 ?></td>
           <td>
             <?php if (!empty($u['foto_profile'])): ?>
-              <img src="<?= upload_url('profile/' . $u['foto_profile']) ?>" class="avatar-sm" alt="">
+              <img src="<?= profile_photo_url($u['foto_profile']) ?>" class="avatar-sm" alt="Foto karyawan">
             <?php else: ?>
               <div class="avatar-sm avatar-fallback"><?= e(initials($u['nama'])) ?></div>
             <?php endif; ?>
