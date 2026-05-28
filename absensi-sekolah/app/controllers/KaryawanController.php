@@ -274,14 +274,26 @@ class KaryawanController extends Controller
 
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime  = $finfo->file($_FILES[$field]['tmp_name']);
-        $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
-        if (!isset($allowed[$mime])) {
+        if (!$mime || $mime === 'application/octet-stream') {
+            $info = @getimagesize($_FILES[$field]['tmp_name']);
+            $mime = $info['mime'] ?? null;
+        }
+
+        $allowed = ['image/jpeg' => 'jpg', 'image/jpg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+        if (!isset($allowed[$mime ?? ''])) {
             $this->flash('error', 'Format foto harus JPG/PNG/WEBP.');
             return null;
         }
 
-        $name = 'p_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $allowed[$mime];
-        $dest = PUBLIC_PATH . '/uploads/profile/' . $name;
+        $targetDir = PUBLIC_PATH . '/uploads/profile';
+        if (!is_dir($targetDir) && !mkdir($targetDir, 0775, true) && !is_dir($targetDir)) {
+            $this->flash('error', 'Gagal membuat folder foto profil.');
+            return null;
+        }
+
+        $ext = $allowed[$mime];
+        $name = 'p_' . date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+        $dest = $targetDir . '/' . $name;
         if (!move_uploaded_file($_FILES[$field]['tmp_name'], $dest)) {
             $this->flash('error', 'Gagal menyimpan foto.');
             return null;

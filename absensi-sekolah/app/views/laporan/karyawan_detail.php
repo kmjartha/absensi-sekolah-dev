@@ -111,7 +111,7 @@ $totalHari = array_sum(array_map('intval', $summary));
   new Chart(document.getElementById('chartHadir'), {
     type: 'bar',
     data: { labels, datasets: [
-      { label:'Hadir', data:hadir, backgroundColor:'#10b981' },
+      { label:'Hadir', data:hadir, backgroundColor:'#2563eb' },
       { label:'Telat', data:telat, backgroundColor:'#f59e0b' },
     ]},
     options:{ responsive:true, scales:{ y:{ beginAtZero:true, max:1, ticks:{stepSize:1} }, x:{ stacked:true } } }
@@ -123,7 +123,7 @@ $totalHari = array_sum(array_map('intval', $summary));
         <?= (int)$summary['hadir'] ?>, <?= (int)$summary['telat'] ?>,
         <?= (int)$summary['izin']  ?>, <?= (int)$summary['sakit'] ?>,
         <?= (int)$summary['alpha'] ?>
-      ], backgroundColor:['#10b981','#f59e0b','#0ea5e9','#ef4444','#94a3b8'] }]
+      ], backgroundColor:['#2563eb','#f59e0b','#0ea5e9','#ef4444','#94a3b8'] }]
     },
     options:{ plugins:{ legend:{ position:'bottom' } } }
   });

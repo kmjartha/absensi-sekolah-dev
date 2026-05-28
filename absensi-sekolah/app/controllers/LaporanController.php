@@ -311,7 +311,7 @@ class LaporanController extends Controller
              . 'h2{margin:0 0 4px} h3{margin:18px 0 6px}'
              . 'table{border-collapse:collapse;font-family:Arial,sans-serif;font-size:12px;margin-bottom:14px}'
              . 'th,td{border:1px solid #999;padding:6px 10px}'
-             . 'th{background:#10b981;color:#fff;text-align:left}'
+             . 'th{background:#2563eb;color:#fff;text-align:left}'
              . 'tfoot td{background:#ecfdf5;font-weight:bold}'
              . '</style></head><body>';
     }

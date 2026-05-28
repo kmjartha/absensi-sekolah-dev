@@ -61,7 +61,7 @@
       labels: ['Hadir','Telat','Izin','Sakit','Alpha'],
       datasets: [{
         data: <?= json_encode([(int)$summary['hadir'],(int)$summary['telat'],(int)$summary['izin'],(int)$summary['sakit'],(int)$summary['alpha']]) ?>,
-        backgroundColor: ['#10b981','#f59e0b','#06b6d4','#ef4444','#94a3b8']
+        backgroundColor: ['#2563eb','#f59e0b','#06b6d4','#ef4444','#94a3b8']
       }]
     },
     options: { plugins:{legend:{position:'bottom'}} }

@@ -42,7 +42,20 @@ if (!function_exists('upload_url')) {
     function upload_url(string $path): string
     {
         if (!$path) return asset('images/default-avatar.png');
-        return url('uploads/' . ltrim($path, '/'));
+
+        $rel = ltrim($path, '/');
+        $rootPath = UPLOADS_PATH . '/' . $rel;
+        $legacyPath = BASE_PATH . '/public/uploads/' . $rel;
+
+        if (is_file($rootPath)) {
+            return url('uploads/' . $rel);
+        }
+
+        if (is_file($legacyPath)) {
+            return url('absensi-sekolah/public/uploads/' . $rel);
+        }
+
+        return url('uploads/' . $rel);
     }
 }
 

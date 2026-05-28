@@ -83,7 +83,7 @@
     data: {
       labels: t.labels,
       datasets: [
-        { label: 'Hadir', data: t.hadir, backgroundColor:'#10b981', borderRadius:6 },
+        { label: 'Hadir', data: t.hadir, backgroundColor:'#2563eb', borderRadius:6 },
         { label: 'Telat', data: t.telat, backgroundColor:'#f59e0b', borderRadius:6 },
         { label: 'Izin/Sakit/Alpha', data: t.absen, backgroundColor:'#ef4444', borderRadius:6 },
       ]
