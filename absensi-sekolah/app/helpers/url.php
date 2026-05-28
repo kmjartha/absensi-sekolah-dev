@@ -64,26 +64,28 @@ if (!function_exists('profile_photo_url')) {
     {
         if (!$path) return asset('images/default-avatar.png');
 
-        $rel = ltrim($path, '/');
-        if (str_starts_with($rel, 'profile/')) {
-            $rel = substr($rel, 8);
-        }
-        if (str_starts_with($rel, 'uploads/')) {
-            $rel = substr($rel, 8);
-        }
+        $rel = trim((string)$path);
+        $rel = str_replace('\\', '/', $rel);
+        $rel = preg_replace('#^https?://[^/]+#i', '', $rel);
+        $rel = preg_replace('#^/+#', '', $rel);
+        $rel = preg_replace('#^.*?/uploads/profile/+#', '', $rel);
+        $rel = preg_replace('#^.*?/profile/+#', '', $rel);
+        $rel = preg_replace('#^uploads/+#', '', $rel);
+        $rel = basename($rel);
 
-        if (str_starts_with($rel, 'profile/')) {
-            $rel = substr($rel, 8);
-        }
+        $candidates = [
+            UPLOADS_PATH . '/profile/' . $rel,
+            BASE_PATH . '/public/uploads/profile/' . $rel,
+            BASE_PATH . '/public/uploads/' . $rel,
+        ];
 
-        $rootPath = UPLOADS_PATH . '/profile/' . $rel;
-        if (is_file($rootPath)) {
-            return url('uploads/profile/' . $rel);
-        }
-
-        $legacyPath = BASE_PATH . '/public/uploads/profile/' . $rel;
-        if (is_file($legacyPath)) {
-            return url('absensi-sekolah/public/uploads/profile/' . $rel);
+        foreach ($candidates as $candidate) {
+            if (is_file($candidate)) {
+                if (str_starts_with($candidate, BASE_PATH . '/public/uploads/')) {
+                    return url('absensi-sekolah/public/uploads/' . ltrim(str_replace(BASE_PATH . '/public/uploads/', '', $candidate), '/'));
+                }
+                return url('uploads/profile/' . $rel);
+            }
         }
 
         return url('uploads/profile/' . $rel);
