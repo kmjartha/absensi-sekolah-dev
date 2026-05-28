@@ -35,14 +35,17 @@
         </div>
         <div class="col-md-3">
           <label class="form-label">Shift</label>
-          <select name="shift_ids[]" class="form-select" multiple size="4">
+          <div style="max-height: 140px; overflow-y: auto; border: 1px solid #eceff3; border-radius: 8px; padding: 8px; background: #f9fafb;">
             <?php foreach ($shifts as $s): ?>
-              <option value="<?= $s['id'] ?>" <?= in_array($s['id'], $shiftIds ?? []) ? 'selected' : '' ?>>
-                <?= e($s['nama']) ?> (<?= substr($s['jam_masuk'],0,5) ?>–<?= substr($s['jam_keluar'],0,5) ?>)
-              </option>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="shift_ids[]" id="shift_<?= $s['id'] ?>" value="<?= $s['id'] ?>" <?= in_array($s['id'], $shiftIds ?? []) ? 'checked' : '' ?>>
+                <label class="form-check-label" for="shift_<?= $s['id'] ?>">
+                  <?= e($s['nama']) ?> <span class="text-muted small">(<?= substr($s['jam_masuk'],0,5) ?>–<?= substr($s['jam_keluar'],0,5) ?>)</span>
+                </label>
+              </div>
             <?php endforeach; ?>
-          </select>
-          <small class="text-muted">Tahan Ctrl/Cmd untuk memilih lebih dari satu. Pilihan pertama jadi default.</small>
+          </div>
+          <small class="text-muted">Pilih satu atau lebih shift. Pilihan pertama jadi default.</small>
         </div>
         <div class="col-md-6">
           <label class="form-label">Email</label>
@@ -85,7 +88,7 @@
       <?php if (!empty($user['foto_profile'])): ?>
         <div class="mb-2">
           <small class="text-muted-soft">Foto saat ini:</small><br>
-          <img src="<?= profile_photo_url($user['foto_profile']) ?>" class="img-fluid rounded mb-2" style="max-height:160px" alt="Foto saat ini">
+          <img src="<?= upload_url('profile/' . $user['foto_profile']) ?>" class="img-fluid rounded mb-2" style="max-height:160px">
         </div>
       <?php endif; ?>
 
