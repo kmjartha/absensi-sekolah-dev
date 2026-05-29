@@ -70,7 +70,7 @@
   new Chart(document.getElementById('trendChart'), {
     type: 'line',
     data: { labels: t.labels, datasets: [
-      { label:'Hadir', data:t.hadir, borderColor:'#10b981', backgroundColor:'rgba(16,185,129,.12)', tension:.35, fill:true },
+      { label:'Hadir', data:t.hadir, borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,.12)', tension:.35, fill:true },
       { label:'Telat', data:t.telat, borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.12)', tension:.35, fill:true },
     ]},
     options: { plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ beginAtZero:true } } }
