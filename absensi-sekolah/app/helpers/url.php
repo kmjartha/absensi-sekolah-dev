@@ -39,7 +39,7 @@ if (!function_exists('asset')) {
 }
 
 if (!function_exists('upload_url')) {
-    function upload_url(string $path): string
+    function upload_url(?string $path = null): string
     {
         if (!$path) return asset('images/default-avatar.png');
         return url('uploads/' . ltrim($path, '/'));

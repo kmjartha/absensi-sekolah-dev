@@ -83,7 +83,13 @@
       <div class="card-soft mt-3">
         <h3 style="font-size:1rem">Absen Masuk Hari Ini</h3>
         <div class="d-flex align-items-center gap-3">
-          <img src="<?= e(upload_url($today['foto_masuk'])) ?>" style="width:64px;height:64px;border-radius:12px;object-fit:cover" alt="">
+          <?php if (!empty($today['foto_masuk'])): ?>
+            <img src="<?= e(upload_url($today['foto_masuk'])) ?>" style="width:64px;height:64px;border-radius:12px;object-fit:cover" alt="Foto absen masuk">
+          <?php else: ?>
+            <div style="width:64px;height:64px;border-radius:12px;background:#f3f3f3;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#bbb">
+              <i class="bi bi-image"></i>
+            </div>
+          <?php endif; ?>
           <div>
             <div style="font-weight:700"><?= e(time_only($today['jam_masuk'])) ?></div>
             <div class="text-muted-soft" style="font-size:.78rem">Status: <?= status_badge($today['status']) ?></div>
