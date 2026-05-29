@@ -4,7 +4,9 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Attendance;
+use App\Models\Shift;
 use App\Models\User;
+use App\Models\UserShift;
 
 class LaporanController extends Controller
 {
@@ -148,6 +150,74 @@ class LaporanController extends Controller
             'rows'  => $rows,
             'q'     => $q,
         ]);
+    }
+
+    public function saveAttendance(int $userId): string
+    {
+        if (!has_role('HRD','Kepsek')) {
+            http_response_code(403);
+            return $this->render('errors.403', ['title'=>'403'], 'auth');
+        }
+
+        $date = trim((string)($_POST['date'] ?? ''));
+        $jamMasuk = trim((string)($_POST['jam_masuk'] ?? ''));
+        $jamKeluar = trim((string)($_POST['jam_keluar'] ?? ''));
+        $attendanceId = (int)($_POST['attendance_id'] ?? 0);
+
+        if ($date === '') {
+            $this->flash('error', 'Tanggal wajib dipilih.');
+            return $this->redirect('/laporan/harian');
+        }
+
+        $att = new Attendance();
+        $existing = $attendanceId ? $att->find($attendanceId) : null;
+
+        $shiftId = (new UserShift())->defaultShiftId($userId);
+        $shift = $shiftId ? (new Shift())->find($shiftId) : null;
+        $status = 'hadir';
+        if ($shift && !empty($shift['jam_masuk'])) {
+            $lateMinutes = max(0, (strtotime("{$date} {$jamMasuk}") - strtotime("{$date} {$shift['jam_masuk']}")) / 60 - (int)$shift['toleransi_menit']);
+            $status = $lateMinutes > 0 ? 'telat' : 'hadir';
+        }
+
+        $data = [
+            'user_id' => $userId,
+            'shift_id' => $shiftId,
+            'tanggal' => $date,
+            'jam_masuk' => $jamMasuk !== '' ? "{$date} {$jamMasuk}" : null,
+            'jam_keluar' => $jamKeluar !== '' ? "{$date} {$jamKeluar}" : null,
+            'status' => $status,
+        ];
+
+        if ($existing) {
+            $att->update($existing['id'], $data);
+            $this->flash('success', 'Kehadiran berhasil diperbarui.');
+        } else {
+            $att->create($data);
+            $this->flash('success', 'Kehadiran berhasil ditambahkan.');
+        }
+
+        return $this->redirect('/laporan/harian?date=' . urlencode($date));
+    }
+
+    public function deleteAttendance(int $id): string
+    {
+        if (!has_role('HRD','Kepsek')) {
+            http_response_code(403);
+            return $this->render('errors.403', ['title'=>'403'], 'auth');
+        }
+
+        $att = new Attendance();
+        $row = $att->find($id);
+        if (!$row) {
+            $this->flash('error', 'Data kehadiran tidak ditemukan.');
+            return $this->redirect('/laporan/harian');
+        }
+
+        $date = $row['tanggal'];
+        $att->delete($id);
+        $this->flash('success', 'Kehadiran berhasil dihapus.');
+        return $this->redirect('/laporan/harian?date=' . urlencode($date));
     }
 
     /** Personal pegawai */

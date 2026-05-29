@@ -70,6 +70,8 @@ $router->get ("/laporan/karyawan",              "LaporanController@karyawan",   
 $router->get ("/laporan/karyawan/{id}",         "LaporanController@karyawanDetail", [AuthMiddleware::class]);
 $router->get ("/laporan/harian",                "LaporanController@harian",        [AuthMiddleware::class]);
 $router->get ("/laporan/karyawan/{id}/export",  "LaporanController@karyawanExport", [AuthMiddleware::class]);
+$router->post("/laporan/harian/user/{userId}/edit", "LaporanController@saveAttendance", [AuthMiddleware::class, CsrfMiddleware::class]);
+$router->post("/laporan/harian/{id}/delete",     "LaporanController@deleteAttendance", [AuthMiddleware::class, CsrfMiddleware::class]);
 $router->get ("/laporan/export",                "LaporanController@export",         [AuthMiddleware::class]);
 
 // ========= Notifikasi (semua user) =========

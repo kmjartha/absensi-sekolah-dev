@@ -73,12 +73,13 @@ if (!function_exists('status_badge')) {
     function status_badge(string $status): string
     {
         $map = [
-            'hadir'    => ['bg-success-subtle text-success', 'Hadir'],
-            'telat'    => ['bg-warning-subtle text-warning', 'Telat'],
-            'izin'     => ['bg-info-subtle text-info', 'Izin'],
-            'sakit'    => ['bg-danger-subtle text-danger', 'Sakit'],
-            'alpha'    => ['bg-secondary-subtle text-secondary', 'Alpha'],
-            'pending'  => ['bg-warning-subtle text-warning', 'Pending'],
+            'hadir'        => ['bg-success-subtle text-success', 'Hadir'],
+            'telat'        => ['bg-warning-subtle text-warning', 'Telat'],
+            'izin'         => ['bg-info-subtle text-info', 'Izin'],
+            'sakit'        => ['bg-danger-subtle text-danger', 'Sakit'],
+            'alpha'        => ['bg-secondary-subtle text-secondary', 'Alpha'],
+            'belum_absen'  => ['bg-secondary-subtle text-secondary', 'Belum Absen'],
+            'pending'      => ['bg-warning-subtle text-warning', 'Pending'],
             'approved' => ['bg-success-subtle text-success', 'Disetujui'],
             'rejected' => ['bg-danger-subtle text-danger', 'Ditolak'],
         ];

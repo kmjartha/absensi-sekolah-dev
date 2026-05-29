@@ -46,19 +46,46 @@ class Attendance extends Model
                 return $stmt->fetchAll();
     }
 
-        /** Daily report for HRD view — include computed minutes late */
+        /** Daily report for HRD view — include all active users, with 'belum_absen' status for missing records */
         public function dailyReport(string $date): array
         {
                 $stmt = $this->db()->prepare(
-                        "SELECT a.*, u.niy, u.nama, s.nama AS shift_nama, s.jam_masuk AS shift_jam_masuk, s.toleransi_menit,
-                                        IF(a.jam_masuk IS NULL, NULL,
-                                            GREATEST(0, TIMESTAMPDIFF(MINUTE, CONCAT(a.tanggal, ' ', s.jam_masuk), a.jam_masuk) - s.toleransi_menit)
-                                        ) AS terlambat_menit
-                         FROM attendances a
-                         JOIN users u ON u.id = a.user_id
+                        "SELECT
+                            a.id AS attendance_id,
+                            COALESCE(a.user_id, u.id) AS user_id,
+                            u.id AS user_id_ref,
+                            u.niy,
+                            u.nama,
+                            r.name AS role_name,
+                            a.shift_id,
+                            a.tanggal,
+                            a.jam_masuk,
+                            a.jam_keluar,
+                            a.foto_masuk,
+                            a.foto_keluar,
+                            a.lat_masuk,
+                            a.lng_masuk,
+                            a.lat_keluar,
+                            a.lng_keluar,
+                            a.face_match_masuk,
+                            a.face_match_keluar,
+                            CASE WHEN a.id IS NULL THEN 'belum_absen' ELSE a.status END AS status,
+                            a.keterangan,
+                            a.created_at,
+                            s.nama AS shift_nama,
+                            s.jam_masuk AS shift_jam_masuk,
+                            s.toleransi_menit,
+                            IF(a.jam_masuk IS NULL, NULL,
+                                GREATEST(0, TIMESTAMPDIFF(MINUTE, CONCAT(a.tanggal, ' ', s.jam_masuk), a.jam_masuk) - s.toleransi_menit)
+                            ) AS terlambat_menit
+                         FROM users u
+                         LEFT JOIN roles r ON r.id = u.role_id
+                         LEFT JOIN attendances a ON a.user_id = u.id AND a.tanggal = ?
                          LEFT JOIN shifts s ON s.id = a.shift_id
-                         WHERE a.tanggal = ?
-                         ORDER BY u.nama ASC"
+                         WHERE u.is_active = 1
+                         ORDER BY CASE WHEN a.id IS NULL THEN 1 ELSE 0 END,
+                                  COALESCE(a.jam_masuk, '9999-12-31 23:59:59') ASC,
+                                  u.nama ASC"
                 );
                 $stmt->execute([$date]);
                 return $stmt->fetchAll();
