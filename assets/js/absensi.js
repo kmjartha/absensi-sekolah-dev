@@ -48,6 +48,39 @@
     btn.disabled = !(gpsOk && faceOk && modelsReady);
   }
 
+  function parseTimeToMinutes(value) {
+    if (!value) return null;
+    const parts = String(value).split(':').map(Number);
+    if (parts.length < 2 || parts.some(Number.isNaN)) return null;
+    return parts[0] * 60 + parts[1];
+  }
+
+  function getShiftCandidates() {
+    const shifts = Array.isArray(cfg.userShifts) ? cfg.userShifts : [];
+    if (!shifts.length) return [];
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    return shifts.filter((shift) => {
+      const start = parseTimeToMinutes(shift.jam_masuk);
+      const end = parseTimeToMinutes(shift.jam_keluar);
+      if (start === null || end === null) return false;
+      const isActive = currentMinutes >= start && currentMinutes <= end;
+      const isNear = currentMinutes < start && (start - currentMinutes) <= 60;
+      shift._isActive = isActive;
+      shift._isNear = isNear;
+      return isActive || isNear;
+    });
+  }
+
+  function formatShiftLabel(shift) {
+    const status = [];
+    if (shift._isActive) status.push('Aktif');
+    if (shift._isNear) status.push('Mendekati');
+    const suffix = status.length ? ` (${status.join(' • ')})` : '';
+    return `${shift.nama} (${String(shift.jam_masuk).slice(0, 5)}–${String(shift.jam_keluar).slice(0, 5)})${suffix}`;
+  }
+
   // --- 1. GPS ---
   function startGps() {
     if (!('geolocation' in navigator)) {
@@ -172,12 +205,41 @@
     const currentDate = now.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric' });
     const currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
     let lateMinutes = 0;
-    const isLate = type === 'masuk' && cfg.shiftStart && typeof cfg.shiftTolerance === 'number'
+
+    let selectedShift = null;
+    if (type === 'masuk') {
+      const candidates = getShiftCandidates();
+      const shouldPrompt = Array.isArray(cfg.userShifts) && cfg.userShifts.length > 1 && candidates.length > 1;
+      if (shouldPrompt) {
+        const result = await Swal.fire({
+          title: 'Pilih shift absen masuk',
+          icon: 'info',
+          input: 'select',
+          inputOptions: Object.fromEntries(candidates.map((shift) => [String(shift.id), formatShiftLabel(shift)])),
+          inputPlaceholder: 'Pilih shift',
+          showCancelButton: true,
+          confirmButtonText: 'Lanjutkan',
+          cancelButtonText: 'Batal',
+          inputValidator: (value) => {
+            if (!value) return 'Pilih shift terlebih dahulu.';
+            return null;
+          }
+        });
+        if (!result.isConfirmed || !result.value) return;
+        selectedShift = candidates.find((shift) => String(shift.id) === String(result.value)) || null;
+      } else {
+        selectedShift = getShiftCandidates()[0] || null;
+      }
+    }
+
+    const selectedShiftStart = selectedShift ? selectedShift.jam_masuk : cfg.shiftStart;
+    const selectedShiftTolerance = selectedShift ? Number(selectedShift.toleransi_menit || 0) : (typeof cfg.shiftTolerance === 'number' ? cfg.shiftTolerance : 0);
+    const isLate = type === 'masuk' && selectedShiftStart && typeof selectedShiftTolerance === 'number'
       ? (() => {
-          const parts = String(cfg.shiftStart).split(':').map(Number);
+          const parts = String(selectedShiftStart).split(':').map(Number);
           if (parts.length < 2 || parts.some(Number.isNaN)) return false;
           const shiftDate = new Date();
-          shiftDate.setHours(parts[0], parts[1] + cfg.shiftTolerance, 0, 0);
+          shiftDate.setHours(parts[0], parts[1] + selectedShiftTolerance, 0, 0);
           const diffMs = now.getTime() - shiftDate.getTime();
           lateMinutes = diffMs > 0 ? Math.ceil(diffMs / 60000) : 0;
           return diffMs > 0;
@@ -198,7 +260,7 @@
               <div class="swal2-absen-meta">
                 <div><span>Tanggal:</span> ${currentDate}</div>
                 <div><span>Waktu absen masuk:</span> ${currentTime}</div>
-                <div><span>Shift mulai:</span> ${cfg.shiftStart || '—'}</div>
+                <div><span>Shift mulai:</span> ${selectedShiftStart || '—'}</div>
                 <div><span>Menit keterlambatan:</span> <strong>${lateMinutes} menit</strong></div>
               </div>
             </div>
@@ -248,6 +310,7 @@
     fd.append('type', type);
     fd.append('foto', fotoData);
     fd.append('lat', gps.lat);
+    if (selectedShift && selectedShift.id) fd.append('shift_id', selectedShift.id);
     fd.append('lng', gps.lng);
     if (lastDistance !== null) fd.append('face_distance', lastDistance);
     if (lastDescriptor)        fd.append('descriptor', JSON.stringify(lastDescriptor));

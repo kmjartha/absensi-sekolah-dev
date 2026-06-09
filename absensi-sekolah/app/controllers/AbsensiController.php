@@ -28,8 +28,10 @@ class AbsensiController extends Controller
         $full       = $userModel->findWithRole((int)$u['id']);
         $att        = (new Attendance())->todayFor((int)$u['id']);
 
-        $shiftId = (new UserShift())->defaultShiftId((int)$u['id']);
+        $userShiftModel = new UserShift();
+        $shiftId = $userShiftModel->defaultShiftId((int)$u['id']);
         $shift   = $shiftId ? (new Shift())->find($shiftId) : null;
+        $userShifts = $userShiftModel->shiftsFor((int)$u['id']);
 
         $hasFace = !empty($full['face_descriptor']);
         $mode    = ($att && $att['jam_masuk'] && !$att['jam_keluar']) ? 'keluar' : 'masuk';
@@ -44,6 +46,7 @@ class AbsensiController extends Controller
             'me'          => $full,
             'today'       => $att,
             'shift'       => $shift,
+            'user_shifts' => $userShifts,
             'mode'        => $mode,
             'has_face'    => $hasFace,
             'face_thresh' => App::$config['face']['distance_threshold'] ?? 0.50,
@@ -121,8 +124,16 @@ class AbsensiController extends Controller
         $attModel = new Attendance();
         $today    = $attModel->todayFor((int)$me['id']);
 
-        // Shift aktif
-        $shiftId = (new UserShift())->defaultShiftId((int)$me['id']);
+        // Shift aktif / dipilih
+        $userShiftModel = new UserShift();
+        $allowedShiftIds = $userShiftModel->shiftIdsFor((int)$me['id']);
+        $selectedShiftId = isset($_POST['shift_id']) ? (int)$_POST['shift_id'] : null;
+        if ($selectedShiftId && !in_array($selectedShiftId, $allowedShiftIds, true)) {
+            return $this->json(['success'=>false,'message'=>'Shift yang dipilih tidak valid']);
+        }
+        $shiftId = $selectedShiftId
+            ? $selectedShiftId
+            : $userShiftModel->defaultShiftId((int)$me['id']);
         $shift   = $shiftId ? (new Shift())->find($shiftId) : null;
 
         $now = current_time();
