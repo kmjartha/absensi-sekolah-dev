@@ -231,18 +231,9 @@
           title: 'Pilih shift absen masuk',
           html: `
             <div class="swal2-shift-picker">
-              <div class="swal2-shift-header">
-                <div class="swal2-shift-icon"><i class="bi bi-clock-history"></i></div>
-                <div>
-                  <div class="swal2-shift-title">Pilih shift yang akan dipakai</div>
-                  <div class="swal2-shift-subtitle">Shift yang tampil adalah shift yang sedang aktif dan shift yang akan dimulai dalam 1 jam ke depan.</div>
-                </div>
-              </div>
-              <div class="swal2-shift-note"><i class="bi bi-info-circle"></i><span>Pastikan Anda memilih shift yang sesuai agar absensi tercatat pada jadwal yang benar.</span></div>
               <div class="swal2-shift-list">${optionsHtml}</div>
             </div>
           `,
-          icon: 'info',
           showCancelButton: true,
           confirmButtonText: 'Lanjutkan',
           cancelButtonText: 'Batal',

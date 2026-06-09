@@ -282,7 +282,8 @@ h3 { font-size: 1.1rem; }
 
 .swal2-absen-full {
   width: min(600px, calc(100vw - 24px)) !important;
-  border-radius: 24px !important;
+  border-radius: 22px !important;
+  padding: 1.1rem 1rem 1rem !important;
 }
 .swal2-absen-full .swal2-icon {
   width: 3rem !important;
@@ -293,9 +294,14 @@ h3 { font-size: 1.1rem; }
   height: 1.5rem !important;
 }
 .swal2-absen-full .swal2-title {
-  font-size: 1.5rem !important;
+  font-size: 1.2rem !important;
   font-weight: 700 !important;
-  margin: 1rem 0 .8rem !important;
+  margin: .15rem 0 .75rem !important;
+  padding: 0 !important;
+}
+.swal2-absen-full .swal2-html-container {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 .swal2-absen-grid {
   display: grid;
@@ -358,9 +364,11 @@ h3 { font-size: 1.1rem; }
 }
 .swal2-absen-full .swal2-actions {
   display: flex !important;
-  gap: .6rem !important;
-  margin-top: .8rem !important;
+  gap: .7rem !important;
+  margin-top: 1rem !important;
   width: 100% !important;
+  justify-content: flex-end !important;
+  padding-top: .2rem !important;
 }
 .swal2-shift-picker {
   text-align: left;
@@ -478,9 +486,9 @@ h3 { font-size: 1.1rem; }
 }
 .swal2-absen-confirm,
 .swal2-absen-cancel {
-  flex: 1 !important;
+  min-width: 110px !important;
   border-radius: 12px !important;
-  padding: .7rem 1rem !important;
+  padding: .75rem 1rem !important;
   font-weight: 700 !important;
   font-size: .95rem !important;
   border: none !important;
