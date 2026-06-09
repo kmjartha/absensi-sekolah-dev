@@ -46,8 +46,7 @@
       </div>
 
       <div class="remember-row">
-        <label><input type="checkbox" name="remember" value="1" <?= !empty($old_niy) ? 'checked' : '' ?>> Ingat saya (14 hari)</label>
-        <small class="text-muted-soft d-block mt-1">Login Anda akan tetap aktif selama 14 hari, lalu perlu login ulang.</small>
+        <label><input type="checkbox" name="remember" value="1" <?= !empty($old_niy) ? 'checked' : '' ?>> Ingat saya</label>
       </div>
 
       <button type="submit" class="submit-btn">

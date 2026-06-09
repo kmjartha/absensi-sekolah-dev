@@ -211,18 +211,54 @@
       const candidates = getShiftCandidates();
       const shouldPrompt = Array.isArray(cfg.userShifts) && cfg.userShifts.length > 1 && candidates.length > 1;
       if (shouldPrompt) {
+        const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        const optionsHtml = candidates.map((shift, idx) => {
+          const badges = [];
+          if (shift._isActive) badges.push('<span class="swal2-shift-option-badge active">Aktif</span>');
+          if (shift._isNear) badges.push('<span class="swal2-shift-option-badge near">Mendekati</span>');
+          const badgeHtml = badges.length ? `<div class="swal2-shift-option-meta"><span class="swal2-shift-option-time">${escapeHtml(String(shift.jam_masuk).slice(0, 5))}–${escapeHtml(String(shift.jam_keluar).slice(0, 5))}</span><span>${badges.join('')}</span></div>` : `<div class="swal2-shift-option-meta"><span class="swal2-shift-option-time">${escapeHtml(String(shift.jam_masuk).slice(0, 5))}–${escapeHtml(String(shift.jam_keluar).slice(0, 5))}</span></div>`;
+          return `
+            <label class="swal2-shift-option">
+              <input type="radio" name="swalShiftSelection" value="${shift.id}" ${idx === 0 ? 'checked' : ''}>
+              <span class="swal2-shift-option-body">
+                <span class="swal2-shift-option-name">${escapeHtml(shift.nama)}</span>
+                ${badgeHtml}
+              </span>
+            </label>`;
+        }).join('');
+
         const result = await Swal.fire({
           title: 'Pilih shift absen masuk',
+          html: `
+            <div class="swal2-shift-picker">
+              <div class="swal2-shift-header">
+                <div class="swal2-shift-icon"><i class="bi bi-clock-history"></i></div>
+                <div>
+                  <div class="swal2-shift-title">Pilih shift yang akan dipakai</div>
+                  <div class="swal2-shift-subtitle">Shift yang tampil adalah shift yang sedang aktif dan shift yang akan dimulai dalam 1 jam ke depan.</div>
+                </div>
+              </div>
+              <div class="swal2-shift-note"><i class="bi bi-info-circle"></i><span>Pastikan Anda memilih shift yang sesuai agar absensi tercatat pada jadwal yang benar.</span></div>
+              <div class="swal2-shift-list">${optionsHtml}</div>
+            </div>
+          `,
           icon: 'info',
-          input: 'select',
-          inputOptions: Object.fromEntries(candidates.map((shift) => [String(shift.id), formatShiftLabel(shift)])),
-          inputPlaceholder: 'Pilih shift',
           showCancelButton: true,
           confirmButtonText: 'Lanjutkan',
           cancelButtonText: 'Batal',
-          inputValidator: (value) => {
-            if (!value) return 'Pilih shift terlebih dahulu.';
-            return null;
+          customClass: {
+            popup: 'swal2-absen-full',
+            confirmButton: 'swal2-absen-confirm',
+            cancelButton: 'swal2-absen-cancel'
+          },
+          buttonsStyling: false,
+          preConfirm: () => {
+            const selectedValue = Swal.getPopup().querySelector('input[name="swalShiftSelection"]:checked');
+            if (!selectedValue) {
+              Swal.showValidationMessage('Pilih satu shift terlebih dahulu.');
+              return false;
+            }
+            return selectedValue.value;
           }
         });
         if (!result.isConfirmed || !result.value) return;

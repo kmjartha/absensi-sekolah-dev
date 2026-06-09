@@ -362,6 +362,120 @@ h3 { font-size: 1.1rem; }
   margin-top: .8rem !important;
   width: 100% !important;
 }
+.swal2-shift-picker {
+  text-align: left;
+  display: grid;
+  gap: .95rem;
+}
+.swal2-shift-header {
+  display: flex;
+  gap: .8rem;
+  align-items: flex-start;
+  padding: .9rem 1rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(24,119,242,.06), rgba(24,119,242,.02));
+  border: 1px solid rgba(24,119,242,.12);
+}
+.swal2-shift-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+.swal2-shift-title {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 1rem;
+  margin-bottom: .2rem;
+}
+.swal2-shift-subtitle {
+  font-size: .84rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.swal2-shift-note {
+  display: flex;
+  gap: .45rem;
+  align-items: flex-start;
+  padding: .7rem .8rem;
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: .8rem;
+  border: 1px solid var(--border);
+}
+.swal2-shift-list {
+  display: grid;
+  gap: .6rem;
+}
+.swal2-shift-option {
+  display: flex;
+  gap: .7rem;
+  align-items: flex-start;
+  padding: .8rem .9rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.swal2-shift-option:hover {
+  border-color: rgba(24,119,242,.28);
+  box-shadow: 0 6px 16px rgba(24,119,242,.08);
+  transform: translateY(-1px);
+}
+.swal2-shift-option input {
+  margin-top: .2rem;
+  accent-color: var(--primary);
+}
+.swal2-shift-option-body {
+  flex: 1;
+  min-width: 0;
+}
+.swal2-shift-option-name {
+  display: block;
+  font-weight: 700;
+  color: var(--text);
+  font-size: .95rem;
+}
+.swal2-shift-option-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .6rem;
+  margin-top: .25rem;
+  flex-wrap: wrap;
+}
+.swal2-shift-option-time {
+  font-size: .84rem;
+  color: var(--text-muted);
+}
+.swal2-shift-option-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .2rem .55rem;
+}
+.swal2-shift-option-badge.active {
+  background: rgba(24,119,242,.11);
+  color: var(--primary-dark);
+}
+.swal2-shift-option-badge.near {
+  background: rgba(245,158,11,.14);
+  color: #b45309;
+}
+.swal2-shift-option-badge.active.near {
+  background: rgba(24,119,242,.12);
+  color: var(--primary-dark);
+}
 .swal2-absen-confirm,
 .swal2-absen-cancel {
   flex: 1 !important;
