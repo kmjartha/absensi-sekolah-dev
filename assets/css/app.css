@@ -366,9 +366,11 @@ h3 { font-size: 1.1rem; }
   display: flex !important;
   gap: .7rem !important;
   margin-top: 1rem !important;
-  width: 100% !important;
-  justify-content: flex-end !important;
-  padding-top: .2rem !important;
+  width: calc(100% - 1.2rem) !important;
+  justify-content: stretch !important;
+  padding: 0 .6rem !important;
+  margin-left: .6rem !important;
+  margin-right: .6rem !important;
 }
 .swal2-shift-picker {
   text-align: left;
@@ -486,7 +488,8 @@ h3 { font-size: 1.1rem; }
 }
 .swal2-absen-confirm,
 .swal2-absen-cancel {
-  min-width: 110px !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
   border-radius: 12px !important;
   padding: .75rem 1rem !important;
   font-weight: 700 !important;

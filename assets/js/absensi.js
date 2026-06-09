@@ -231,6 +231,13 @@
           title: 'Pilih shift absen masuk',
           html: `
             <div class="swal2-shift-picker">
+              <div class="swal2-shift-header">
+                <div class="swal2-shift-icon"><i class="bi bi-clock-history"></i></div>
+                <div>
+                  <div class="swal2-shift-title">Pilih shift yang akan dipakai</div>
+                  <div class="swal2-shift-subtitle">Shift yang muncul adalah shift yang sedang aktif atau akan dimulai dalam 1 jam ke depan.</div>
+                </div>
+              </div>
               <div class="swal2-shift-list">${optionsHtml}</div>
             </div>
           `,
