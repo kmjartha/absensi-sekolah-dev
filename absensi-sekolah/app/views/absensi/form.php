@@ -1,4 +1,4 @@
-<?php /** @var array $me, $today, $shift; @var string $mode; @var bool $has_face; @var float $face_thresh */ ?>
+<?php /** @var array $me, $today, $shift, $user_shifts; @var string $mode; @var bool $has_face; @var float $face_thresh */ ?>
 
 <div class="absen-wrap">
   <div class="absen-head">
@@ -116,7 +116,8 @@
       hasFace       : <?= $has_face ? 'true':'false' ?>,
       csrf          : <?= json_encode(csrf_token()) ?>,
       shiftStart    : <?= $shift ? json_encode($shift['jam_masuk']) : 'null' ?>,
-      shiftTolerance: <?= $shift ? (int)$shift['toleransi_menit'] : 0 ?>
+      shiftTolerance: <?= $shift ? (int)$shift['toleransi_menit'] : 0 ?>,
+      userShifts    : <?= json_encode($user_shifts ?? []) ?>
     };
   </script>
   <script src="<?= asset('vendor/face-api/face-api.min.js') ?>"></script>

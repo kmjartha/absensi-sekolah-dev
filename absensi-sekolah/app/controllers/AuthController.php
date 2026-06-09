@@ -15,6 +15,21 @@ class AuthController extends Controller
         if (auth_check()) {
             return $this->redirect('/dashboard');
         }
+
+        $remembered = remember_me_login();
+        if ($remembered) {
+            $_SESSION['user'] = [
+                'id'           => (int)$remembered['id'],
+                'niy'          => $remembered['niy'],
+                'nama'         => $remembered['nama'],
+                'jabatan'      => $remembered['jabatan'],
+                'role_id'      => (int)$remembered['role_id'],
+                'role_name'    => $remembered['role_name'],
+                'foto_profile' => $remembered['foto_profile'],
+            ];
+            return $this->redirect('/dashboard');
+        }
+
         return $this->render('auth.login', [
             'title' => 'Masuk',
             'error' => Session::flash('error'),
@@ -66,15 +81,22 @@ class AuthController extends Controller
             'foto_profile' => $u['foto_profile'],
         ];
 
-        // Remember-me cookie (30 hari) — hanya simpan NIY untuk pre-fill
+        // Remember-me cookie (14 hari) untuk auto-login
         if ($remember) {
+            setcookie('remember_me', remember_me_value($u), [
+                'expires'  => time() + 60*60*24*14,
+                'path'     => '/',
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
             setcookie('remember_niy', $niy, [
-                'expires'  => time() + 60*60*24*30,
+                'expires'  => time() + 60*60*24*14,
                 'path'     => '/',
                 'httponly' => true,
                 'samesite' => 'Lax',
             ]);
         } else {
+            setcookie('remember_me', '', time()-3600, '/');
             setcookie('remember_niy', '', time()-3600, '/');
         }
 
@@ -137,6 +159,8 @@ class AuthController extends Controller
 
     public function logout(): string
     {
+        setcookie('remember_me', '', time() - 3600, '/');
+        setcookie('remember_niy', '', time() - 3600, '/');
         Session::destroy();
         return $this->redirect('/login');
     }

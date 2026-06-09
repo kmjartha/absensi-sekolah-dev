@@ -48,6 +48,39 @@
     btn.disabled = !(gpsOk && faceOk && modelsReady);
   }
 
+  function parseTimeToMinutes(value) {
+    if (!value) return null;
+    const parts = String(value).split(':').map(Number);
+    if (parts.length < 2 || parts.some(Number.isNaN)) return null;
+    return parts[0] * 60 + parts[1];
+  }
+
+  function getShiftCandidates() {
+    const shifts = Array.isArray(cfg.userShifts) ? cfg.userShifts : [];
+    if (!shifts.length) return [];
+
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    return shifts.filter((shift) => {
+      const start = parseTimeToMinutes(shift.jam_masuk);
+      const end = parseTimeToMinutes(shift.jam_keluar);
+      if (start === null || end === null) return false;
+      const isActive = currentMinutes >= start && currentMinutes <= end;
+      const isNear = currentMinutes < start && (start - currentMinutes) <= 60;
+      shift._isActive = isActive;
+      shift._isNear = isNear;
+      return isActive || isNear;
+    });
+  }
+
+  function formatShiftLabel(shift) {
+    const status = [];
+    if (shift._isActive) status.push('Aktif');
+    if (shift._isNear) status.push('Mendekati');
+    const suffix = status.length ? ` (${status.join(' • ')})` : '';
+    return `${shift.nama} (${String(shift.jam_masuk).slice(0, 5)}–${String(shift.jam_keluar).slice(0, 5)})${suffix}`;
+  }
+
   // --- 1. GPS ---
   function startGps() {
     if (!('geolocation' in navigator)) {
@@ -172,12 +205,75 @@
     const currentDate = now.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric' });
     const currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
     let lateMinutes = 0;
-    const isLate = type === 'masuk' && cfg.shiftStart && typeof cfg.shiftTolerance === 'number'
+
+    let selectedShift = null;
+    if (type === 'masuk') {
+      const candidates = getShiftCandidates();
+      const shouldPrompt = Array.isArray(cfg.userShifts) && cfg.userShifts.length > 1 && candidates.length > 1;
+      if (shouldPrompt) {
+        const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        const optionsHtml = candidates.map((shift, idx) => {
+          const badges = [];
+          if (shift._isActive) badges.push('<span class="swal2-shift-option-badge active">Aktif</span>');
+          if (shift._isNear) badges.push('<span class="swal2-shift-option-badge near">Mendekati</span>');
+          const badgeHtml = badges.length ? `<div class="swal2-shift-option-meta"><span class="swal2-shift-option-time">${escapeHtml(String(shift.jam_masuk).slice(0, 5))}–${escapeHtml(String(shift.jam_keluar).slice(0, 5))}</span><span>${badges.join('')}</span></div>` : `<div class="swal2-shift-option-meta"><span class="swal2-shift-option-time">${escapeHtml(String(shift.jam_masuk).slice(0, 5))}–${escapeHtml(String(shift.jam_keluar).slice(0, 5))}</span></div>`;
+          return `
+            <label class="swal2-shift-option">
+              <input type="radio" name="swalShiftSelection" value="${shift.id}" ${idx === 0 ? 'checked' : ''}>
+              <span class="swal2-shift-option-body">
+                <span class="swal2-shift-option-name">${escapeHtml(shift.nama)}</span>
+                ${badgeHtml}
+              </span>
+            </label>`;
+        }).join('');
+
+        const result = await Swal.fire({
+          title: 'Pilih shift absen masuk',
+          html: `
+            <div class="swal2-shift-picker">
+              <div class="swal2-shift-header">
+                <div class="swal2-shift-icon"><i class="bi bi-clock-history"></i></div>
+                <div>
+                  <div class="swal2-shift-title">Pilih shift yang akan dipakai</div>
+                  <div class="swal2-shift-subtitle">Shift yang muncul adalah shift yang sedang aktif atau akan dimulai dalam 1 jam ke depan.</div>
+                </div>
+              </div>
+              <div class="swal2-shift-list">${optionsHtml}</div>
+            </div>
+          `,
+          showCancelButton: true,
+          confirmButtonText: 'Lanjutkan',
+          cancelButtonText: 'Batal',
+          customClass: {
+            popup: 'swal2-absen-full',
+            confirmButton: 'swal2-absen-confirm',
+            cancelButton: 'swal2-absen-cancel'
+          },
+          buttonsStyling: false,
+          preConfirm: () => {
+            const selectedValue = Swal.getPopup().querySelector('input[name="swalShiftSelection"]:checked');
+            if (!selectedValue) {
+              Swal.showValidationMessage('Pilih satu shift terlebih dahulu.');
+              return false;
+            }
+            return selectedValue.value;
+          }
+        });
+        if (!result.isConfirmed || !result.value) return;
+        selectedShift = candidates.find((shift) => String(shift.id) === String(result.value)) || null;
+      } else {
+        selectedShift = getShiftCandidates()[0] || null;
+      }
+    }
+
+    const selectedShiftStart = selectedShift ? selectedShift.jam_masuk : cfg.shiftStart;
+    const selectedShiftTolerance = selectedShift ? Number(selectedShift.toleransi_menit || 0) : (typeof cfg.shiftTolerance === 'number' ? cfg.shiftTolerance : 0);
+    const isLate = type === 'masuk' && selectedShiftStart && typeof selectedShiftTolerance === 'number'
       ? (() => {
-          const parts = String(cfg.shiftStart).split(':').map(Number);
+          const parts = String(selectedShiftStart).split(':').map(Number);
           if (parts.length < 2 || parts.some(Number.isNaN)) return false;
           const shiftDate = new Date();
-          shiftDate.setHours(parts[0], parts[1] + cfg.shiftTolerance, 0, 0);
+          shiftDate.setHours(parts[0], parts[1] + selectedShiftTolerance, 0, 0);
           const diffMs = now.getTime() - shiftDate.getTime();
           lateMinutes = diffMs > 0 ? Math.ceil(diffMs / 60000) : 0;
           return diffMs > 0;
@@ -198,7 +294,7 @@
               <div class="swal2-absen-meta">
                 <div><span>Tanggal:</span> ${currentDate}</div>
                 <div><span>Waktu absen masuk:</span> ${currentTime}</div>
-                <div><span>Shift mulai:</span> ${cfg.shiftStart || '—'}</div>
+                <div><span>Shift mulai:</span> ${selectedShiftStart || '—'}</div>
                 <div><span>Menit keterlambatan:</span> <strong>${lateMinutes} menit</strong></div>
               </div>
             </div>
@@ -248,6 +344,7 @@
     fd.append('type', type);
     fd.append('foto', fotoData);
     fd.append('lat', gps.lat);
+    if (selectedShift && selectedShift.id) fd.append('shift_id', selectedShift.id);
     fd.append('lng', gps.lng);
     if (lastDistance !== null) fd.append('face_distance', lastDistance);
     if (lastDescriptor)        fd.append('descriptor', JSON.stringify(lastDescriptor));

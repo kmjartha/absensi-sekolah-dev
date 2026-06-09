@@ -46,7 +46,7 @@
       </div>
 
       <div class="remember-row">
-        <label><input type="checkbox" name="remember" value="1" <?= !empty($old_niy) ? 'checked' : '' ?>> Ingat NIY saya</label>
+        <label><input type="checkbox" name="remember" value="1" <?= !empty($old_niy) ? 'checked' : '' ?>> Ingat saya</label>
       </div>
 
       <button type="submit" class="submit-btn">
