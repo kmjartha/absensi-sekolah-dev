@@ -13,6 +13,14 @@
   <link rel="stylesheet" href="<?= asset('vendor/bootstrap-icons/bootstrap-icons.css') ?>">
   <link rel="stylesheet" href="<?= asset('vendor/sweetalert2/sweetalert2.min.css') ?>">
   <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
+  <script>
+    window.SIABSEN = window.SIABSEN || {};
+    window.SIABSEN.paths = {
+      modelsUrl: <?= json_encode(asset('models')) ?>,
+      swUrl: <?= json_encode(url('sw-face-models.js')) ?>
+    };
+  </script>
+  <script src="<?= asset('js/face-model-preload.js') ?>"></script>
 </head>
 <body>
 <div class="mobile-shell">

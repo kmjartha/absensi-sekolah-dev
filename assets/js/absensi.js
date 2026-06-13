@@ -30,6 +30,8 @@
   let gpsOk = false;
   let faceOk = !hasFace; // kalau user belum punya descriptor → skip face check
 
+  window.SIABSEN = window.SIABSEN || {};
+
   function setHud(el, ok, text) {
     el.classList.remove('ok','bad','wait');
     el.classList.add(ok === true ? 'ok' : ok === false ? 'bad' : 'wait');
@@ -120,12 +122,28 @@
   }
 
   async function loadModels() {
+    if (window.SIABSEN?.faceModelsReady) {
+      modelsReady = true;
+      setHud(hudFace, null, '<i class="bi bi-person-check-fill"></i> Model wajah siap');
+      return;
+    }
+
     setHud(hudFace, null, '<i class="bi bi-arrow-repeat"></i> Memuat model wajah…');
     try {
-      await faceapi.nets.tinyFaceDetector.loadFromUri(cfg.modelsUrl);
-      await faceapi.nets.faceLandmark68Net.loadFromUri(cfg.modelsUrl);
-      await faceapi.nets.faceRecognitionNet.loadFromUri(cfg.modelsUrl);
+      if (window.SIABSEN?.faceModelsPromise) {
+        await window.SIABSEN.faceModelsPromise;
+      }
+
+      const modelPromise = Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(cfg.modelsUrl),
+        faceapi.nets.faceLandmark68Net.loadFromUri(cfg.modelsUrl),
+        faceapi.nets.faceRecognitionNet.loadFromUri(cfg.modelsUrl)
+      ]);
+      window.SIABSEN.faceModelsPromise = modelPromise;
+      await modelPromise;
       modelsReady = true;
+      window.SIABSEN.faceModelsReady = true;
+      setHud(hudFace, null, '<i class="bi bi-person-check-fill"></i> Model wajah siap');
     } catch (e) {
       setHud(hudFace, false, '<i class="bi bi-x-circle"></i> Gagal memuat model');
       throw e;
